@@ -4,6 +4,7 @@ from math import sin, cos, tan
 from math import acos, atan
 from math import degrees, radians
 import time
+from Stop_Watch import *
 
 def clean(x):
     return round(x*1000)/1000
@@ -23,23 +24,14 @@ def hypotenuse(coor):
     y = abs(y)
     return math.sqrt( x**2 + y**2)
 
-def xmag(vector_list):
+def magnitude(vector_list): # operates on array of vectors
+    assert type(vector_list) == 'array'
     return np.linalg.norm(vector_list,axis=1)
-def magnitude(vector):
-    x, y, z = vector
-    x = abs(x)
-    y = abs(y)
-    z = abs(z)
-    return math.sqrt( x**2 + y**2 + z**2)
     
-def normalize(vector):
-    x, y, z = vector
-    mag = magnitude(vector)
-    return (x/mag, y/mag, z/mag)
     
-def xnormalize(vector_list):
+def normalize(vector_list): # operates on array of vectors
     assert vector_list.shape[1] == 3
-    mag_list = xmag(vector_list)
+    mag_list = magnitude(vector_list)
     return vector_list / mag_list[:,None]
 
 def xcartesian_to_polar(obj_data): # starts from positive x, counter clockwise
@@ -67,7 +59,7 @@ def cartesian_to_polar(vector): # starts from positive x, counter clockwise
     phi = degrees(phi)
     return (r, theta, phi)
     
-def polar_to_cartesian(vector): # this took hours jesus
+def polar_to_cartesian(vector): # this took hours jesus, now it's outdated
     r, theta, phi = vector
     assert theta>0 # you know what you have to do
     assert theta<360
@@ -91,7 +83,7 @@ def normal_vector(polygon_list): # finds the normal of a list of polygons
     p2 = polygon_list[:,1]
     p3 = polygon_list[:,2]
     normals = np.cross(p2-p1, p3-p1)
-    normals = xnormalize(normals)
+    normals = normalize(normals)
     return normals
     
 def dot_product(a, b): #return np.multiply(a, b).sum(1)
@@ -106,8 +98,8 @@ def angle(a, b):# finds the angle between two (lists of) vectors
     assert a.shape[0] == 3
     assert b.shape[0] == 3
     
-    a = xnormalize(a)
-    b = xnormalize(b)
+    a = normalize(a)
+    b = normalize(b)
     dot = dot_product(a, b)
     angle = np.arccos( dot )
     return angle*57.295779513

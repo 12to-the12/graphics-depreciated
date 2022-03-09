@@ -1,7 +1,7 @@
 # I'm sorry I didn't comment better. Just remember Object.object_data is the important thing
 
 
-# diagnostics function, diagnostics flag
+
 import sys, pygame
 from pygame import gfxdraw
 import random

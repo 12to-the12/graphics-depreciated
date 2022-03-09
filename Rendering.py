@@ -7,7 +7,7 @@ import math
 from math import tan
 from math import degrees
 from Vector_Math import *
-
+from Stop_Watch import *
 def clean(x):
     return x#round(1000*x)/1000
 
@@ -176,9 +176,7 @@ def xrender(epoch, surface, camera, Obj):
     
     absolute = Obj.calc_absolute() #returns list of vertexes (-1,3)
     
-    print('absolute:', (time.time()-epoch)*1000)
-    epoch = time.time()
-    
+    Stop_Watch.take_time('absolute') # the class not the module
     
     #print('absolute:',absolute)
     if camera.update_flag:
@@ -201,8 +199,7 @@ def xrender(epoch, surface, camera, Obj):
     
     epoch, projected = xproject(epoch, camera, absolute) # returns -0.5 to 0.5  takes list of vertexes (-1,3), returns list of coordinates(-1,2)
     
-    print('post project:', (time.time()-epoch)*1000)
-    epoch = time.time()
+    Stop_Watch.take_time('post project')
     #print(projected)
     indexed_vertices = indexed_vertices[0:1]
     #print(indexed_vertices)
