@@ -1,5 +1,7 @@
 # I'm sorry I didn't comment better. Just remember Object.object_data is the important thing
 
+
+# diagnostics function, diagnostics flag
 import sys, pygame
 from pygame import gfxdraw
 import random
@@ -16,14 +18,15 @@ from Camera import *
 from Vector_Math import *
 from Rendering import *
 from Objects import *
+from Stop_Watch import *
 import timeit
 
 
 pygame.init()
 print('\n\n\n\n')
-size = width, height = (528,452)
+size = width, height = (1920/2,1080/2)
 speed = [1, 1]
-screen = pygame.display.set_mode(size, pygame.FULLSCREEN)
+screen = pygame.display.set_mode(size)#, pygame.FULLSCREEN)
 
 #print(screen.get_size() )
 
@@ -52,6 +55,7 @@ y = np.array( [  [1,0,0],[1,0,0],[0,-1,-3]  ]    )
 print(angle(x, y))
 #print( normal_vector(x))
 #print('origins:',Object.origin_list)
+init_cubes()
 def main(): # this is the main loop where everything happens
     stamp = time.time() 
     print('start:',stamp)
