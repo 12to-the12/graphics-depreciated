@@ -25,6 +25,7 @@ def hypotenuse(coor):
     return math.sqrt( x**2 + y**2)
 
 def magnitude(vector_list): # operates on array of vectors
+    print type(vector_list)
     assert type(vector_list) == 'array'
     return np.linalg.norm(vector_list,axis=1)
     
