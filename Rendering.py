@@ -124,7 +124,7 @@ def screensize(surface, coords):
     coords += 1
     coords /= 2
     coords[:,0] *= width
-    coords[:,1] *= width# this method avoids distortion
+    coords[:,1] *= height# this method avoids distortion
     return coords
 def sort_vertices(vertex_list):# takes an indexed list and sorts it
     # take shape (-1,4)
@@ -147,7 +147,7 @@ def build_polygons(vertices, pointers): # this also checks for missing and disca
     print('any:',polygons)
     #print(polygons.shape)
     print(pointers[polygons].shape)
-    assert polygons.shape[1:] == (3, 3)
+    #assert polygons.shape[1:] == (3, 3)
     #np.isin(object_data, surviving_vertices)
     print(in_list)
 def cube_cull(camera, vertex_list): # discards vertices that aren't in the culling cube

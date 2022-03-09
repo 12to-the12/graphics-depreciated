@@ -1,6 +1,5 @@
 from Object import *
 from Mesh import *
-from blender import *
 points = [
     [[-1, 1,-1],[0,0,0]],
     [[ 1, 1,-1],[0,0,0]],
@@ -32,11 +31,11 @@ y = 0
 x = 1#15 norm for 1k cubes 
 z = x
 
-
-# 1k  cubes projects in ~50 milliseconds
-for xx in range(-x, x+1):
-    for zz in range(-z, z+1):
-        Object(mesh, location=[xx*3, y,zz*3])
+def init_cubes():
+    # 1k  cubes projects in ~50 milliseconds
+    for xx in range(-x, x+1):
+        for zz in range(-z, z+1):
+            Object(mesh, location=[xx*3, y,zz*3])
 '''
 boxa = Object(mesh,location=[-5  ,y,0 ] )
 boxb = Object(mesh,location=[-2.5,y,0 ] )
@@ -87,10 +86,3 @@ meshdata =[
         [[-5,-4,0],[-7.5,-2,3],[-7.5,-4,0]],
         [[-5,4,0],[-7.5,4,0],[-7.5,2,3]],
     ]
-    
-#mesh = Mesh(meshdata)
-#cruiser = Object(mesh,location=[0,10,0] )
-
-
-v = v.split('\n')
-f = f.split('\n')
