@@ -61,6 +61,15 @@ def screensize(surface, coords):# changes fractional coordinates to actual pixel
     coords[:,1] *= height# this method doesn't avoid distortion
     return coords
 
+def transfer_pointers(pointers): # takes pointers and transfers the indexes to the surviving polygons
+    pass
+
+def build_coords(projected, pointers): #this assumes all vertices are present and none have been culled
+        projected = projected.reshape(-1,1)
+        pointers = pointers.reshape(-1,1).astype('int')
+        built = projected[pointers]
+        built = built.reshape(-1,3,3)
+        return built
 def filter_pointers(surviving, pointers):#
     mask = np.isin(pointers,surviving)
     mask = mask.reshape(-1,3)
@@ -124,16 +133,19 @@ def render(surface, camera, Obj):
     #print(Obj.object_data[:,0,0])
     #print(Obj.object_data)
     # at this point they're still just pointers
-    coords, polygons = build_polygons(scaled, absolute,indexed_vertices, Obj.object_data) #returns the 3d coords
-    # TODO clip if all points are outside
+    #coords, polygons = build_polygons(scaled, absolute,indexed_vertices, Obj.object_data) #returns the 3d coords
     
+    
+    
+    # TODO clip if all points are outside
+    built = build_coords(scaled, Obj.object_data[:,0,0])
     
         
     # TODO cull backfaces
     #culled = cull_backfaces(clipped)
     
     Stop_Watch.take_time('scale')
-
+    '''
     scaled = scaled.reshape(-1,2)
     for a in scaled:
         #print('a:',a)
@@ -141,9 +153,9 @@ def render(surface, camera, Obj):
         draw_circle(surface, a)
         #wireframe_draw(surface, a)
     '''
-    for a in scaled.reshape(-1,3,3):
+    for a in built:
         wireframe_draw(surface, a)
-    '''
+    
     Stop_Watch.take_time('draw')
     epoch = time()
     

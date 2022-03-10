@@ -20,7 +20,7 @@ from Stop_Watch import *
 from time import sleep
 from time import time
 
-sleep(1)
+sleep(1) 
 pygame.init()
 size = width, height = (1000,1000)
 speed = [1, 1]
@@ -53,6 +53,7 @@ y = np.array( [  [1,0,0],[1,0,0],[0,-1,-3]  ]    )
 #print(angle(x, y))
 #print( normal_vector(x))
 #print('origins:',Object.origin_list)
+
 init_cubes()
 def main(): # this is the main loop where everything happens
     stamp = time() 
@@ -112,7 +113,7 @@ def main(): # this is the main loop where everything happens
         #time.sleep(50000000000000000)
         #print(Object.object_data[:,0,0])
         #print('\n\n\n\n')
-        #sleep(0.5)
+        sleep(0.5)
         print('total:',(time()-stamp)*1000)
         print()
         
