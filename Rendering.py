@@ -58,33 +58,35 @@ def screensize(surface, coords):# changes fractional coordinates to actual pixel
     coords += 1
     coords /= 2
     coords[:,0] *= width
-    coords[:,1] *= height# this doesn't method avoids distortion
+    coords[:,1] *= height# this method doesn't avoid distortion
     return coords
 
-def sort_vertices(vertex_list):# takes an indexed list and sorts it
-    # take shape (-1,4)
-    pass
+def filter_pointers(surviving, pointers):#
+    mask = np.isin(pointers,surviving)
+    mask = mask.reshape(-1,3)
+    any = np.any(mask, axis=0)
+
     
-def build_polygons(vertices, pointers): # this also checks for missing and discards the polygons if they're not all there
-    surviving = vertices[:,3].astype('int')
-    print('surviving indexes:', surviving)
-    #object_data = object_data[:,0]
-    #present = np.any(object_data,axis=1,where =(object_data[:,0] in surviving_vertices) )
-    print(surviving.shape)
-    print(pointers.shape)
-    print(pointers)
-    #pointers = pointers.reshape(-1)
-    in_list =  np.isin(pointers, surviving)#.reshape(-1,3)
-    print('if the pointers in the list:', pointers)
-    polygons = np.any(in_list, axis=1   )
-    #polygons = (polygons in surviving)
-    print()
-    print('any:',polygons)
+def build_polygons(coords, source_vertices, indexed_vertices, object_data): # this also checks for missing and discards the polygons if they're not all there
+    surviving = indexed_vertices[:,3].astype('int')
+    pointers = object_data[:, 0,0].reshape(-1,1).astype('int')
+    # TODO filtered_pointers = filter_pointers(surviving, pointers)
+    filtered_pointers = pointers
+    source_vertices = source_vertices.reshape(-1,3)
+    polygons = source_vertices[filtered_pointers]
+    polygons = polygons.reshape(-1,3,3)
     #print(polygons.shape)
-    print(pointers[polygons].shape)
-    #assert polygons.shape[1:] == (3, 3)
-    #np.isin(object_data, surviving_vertices)
-    print(in_list)
+    #print('object data',object_data[:,0].shape)
+
+
+    object_data[:, 0] = polygons
+    return object_data
+
+
+
+
+    quit()
+
 
 def render(surface, camera, Obj):
     # the best way to organize the data is just to have a massive list of all the object data that can be culled and sorted each run, lots of references to immutable data too, like textures
@@ -93,7 +95,7 @@ def render(surface, camera, Obj):
     
     
     absolute = Obj.calc_absolute() # converts object local coordinates to world coordinates
-    
+
     Stop_Watch.take_time('absolute') # the class not the module
     
     #print('absolute:',absolute)
@@ -103,8 +105,7 @@ def render(surface, camera, Obj):
     # here we have the relative vertex data
     x = np.arange(absolute.shape[0]).reshape(-1,1) # basically a list of each index along absolute
     indexed_vertices = np.append(absolute, x, axis=1 ) # list of vertices with their index
-    
-    
+    print('indexed vertices',indexed_vertices.shape)
     # we don't need to map vertexes that are occluded, ones facing away, or ones not within the cubic frustrum
     
     # so actually implement that stuff
@@ -113,34 +114,27 @@ def render(surface, camera, Obj):
     #x = cube_cull(camera, indexed_vertices)
     #quit()
     #x = distance_cull(x, distance=20)
-    np.TooHardError
     
     projected = project(camera, absolute) # returns -0.5 to 0.5  takes list of vertexes (-1,3), returns list of coordinates(-1,2)
     
     Stop_Watch.take_time('post project')
+    scaled = screensize(surface, projected)
     #print(projected)
-    indexed_vertices = indexed_vertices[0:1]
     #print(indexed_vertices)
     #print(Obj.object_data[:,0,0])
     #print(Obj.object_data)
     # at this point they're still just pointers
-    #polygons = build_polygons(indexed_vertices, Obj.object_data[:,0,0]) #(-1,4) & (-1,3)
+    coords, polygons = build_polygons(scaled, absolute,indexed_vertices, Obj.object_data) #returns the 3d coords
     # TODO clip if all points are outside
     
-    #print(projected.shape)
-    
-    #clipped_verts = clip_outside(projected)
-    
-    
-    #print(clipped_verts)
     
         
     # TODO cull backfaces
     #culled = cull_backfaces(clipped)
-    scaled = screensize(surface, projected)
-    Stop_Watch.take_time('scale')
-    scaled = scaled.reshape(-1,2)
     
+    Stop_Watch.take_time('scale')
+
+    scaled = scaled.reshape(-1,2)
     for a in scaled:
         #print('a:',a)
         pass
