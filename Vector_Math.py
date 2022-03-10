@@ -25,8 +25,8 @@ def hypotenuse(coor):
     return math.sqrt( x**2 + y**2)
 
 def magnitude(vector_list): # operates on array of vectors
-    print type(vector_list)
-    assert type(vector_list) == 'array'
+    #print( vector_list.shape )
+    assert vector_list.shape[1] == 3
     return np.linalg.norm(vector_list,axis=1)
     
     
@@ -35,10 +35,24 @@ def normalize(vector_list): # operates on array of vectors
     mag_list = magnitude(vector_list)
     return vector_list / mag_list[:,None]
 
-def xcartesian_to_polar(obj_data): # starts from positive x, counter clockwise
-    pass
+def xcartesian_to_polar(vertex_list):# works
+    # yaw starts from positive x, counter clockwise
+    # pitch starts from positive z, moves down from there
+    
+    x = vertex_list[:,0]
+    y = vertex_list[:,1]
+    z = vertex_list[:,2]
 
-    #np.where( x[0]==0, )
+    r = magnitude(vertex_list)
+    yaw = np.arctan2(y, x,) # smart arctan works for any angle
+    yaw = np.where(yaw<0, np.deg2rad(360)+yaw, yaw) # adds to negative
+    pitch = np.arccos(z/r)
+
+    r = r.reshape(-1,1)
+    yaw = np.rad2deg(yaw).reshape(-1,1)
+    pitch = np.rad2deg(pitch).reshape(-1,1)
+    polar = np.concatenate( (r, yaw, pitch), axis=1 )
+    return polar
 
 def cartesian_to_polar(vector): # starts from positive x, counter clockwise
     #stamp = time.time()
