@@ -37,6 +37,7 @@ def project(camera, vertex_data): # plots 3d points in 2d
     
     camera_direction = np.array( [camera.yaw, camera.pitch] )
     #print('camera direction:',camera_direction )
+    camera.yaw %= 360
     assert 0<=camera.yaw<360
     assert 0<=camera.pitch<360
     #print()
