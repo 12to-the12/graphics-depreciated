@@ -26,7 +26,7 @@ print('done importing')
 Stop_Watch.timing_flag = False
 #sleep(1) 
 pygame.init()
-size = width, height = (1000,1000)
+size = width, height = (2000,2000)
 speed = [1, 1]
 screen = pygame.display.set_mode(size)#, pygame.FULLSCREEN)
 
@@ -36,12 +36,18 @@ screen = pygame.display.set_mode(size)#, pygame.FULLSCREEN)
 camera = Camera(FOV=46.8,location=[0,0,0],pitch=90,yaw=90)# FOV 46.8
 
 
-pygame.mouse.set_visible(False)
+#pygame.mouse.set_visible(False)
 
 #boxa = Object(mesh,location=[0,5,0] )
 a = np.array([ [ -1,0,0],[0,0,-1],[2,2,-1]])
 
 #print( xcartesian_to_polar(a) )
+
+
+
+
+
+
 
 #print(Object.object_data[:,0])
 
@@ -60,7 +66,9 @@ y = np.array( [  [1,0,0],[1,0,0],[0,-1,-3]  ]    )
 #print( xcartesian_to_polar(x))
 #print(         '3d to 2d:', project(camera, x)    )
 
-init_cubes()
+#init_cubes()
+init_obj('dp.obj', [0,5,0])
+init_obj('johann.obj', [0,5,0])
 def main(): # this is the main loop where everything happens
     stamp = time() 
     print('start epoch:',stamp)
@@ -74,8 +82,11 @@ def main(): # this is the main loop where everything happens
     move_right = False
     move_up = False
     move_down = False
+
+    update_rotation = False
+    sensitivity = 100
     while 1:
-        camera.FOV += 0.1
+        #camera.FOV += 0.1
         if passed%300==0:print('.')
         #print(passed)
         delta  = time()-stamp # this thing allows you to track time per frame
@@ -95,9 +106,16 @@ def main(): # this is the main loop where everything happens
         #clock.tick(24)
         xyz = 2
         #Object.origin_list[:,xyz] = Object.origin_list[:,xyz] + 0.1
-        amount = 0.5
+        amount = 0.1
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                start_yaw = camera.yaw
+                start_pitch = camera.pitch
+                initial_pos = pygame.mouse.get_pos()
+                update_rotation = True
+            if event.type == pygame.MOUSEBUTTONUP:
+                update_rotation = False
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_w:
                     move_forward = True
@@ -142,8 +160,15 @@ def main(): # this is the main loop where everything happens
         if move_right:    camera.move(dx= +amount)
         if move_up:       camera.move(dz= +amount)
         if move_down:     camera.move(dz= -amount)
-        
-    
+        if update_rotation:
+            pos = pygame.mouse.get_pos()
+            size = screen.get_size()
+            x = (pos[0]-initial_pos[0]) / size[0]
+            y = (pos[1]-initial_pos[1]) / size[1]
+            #x = (x*2)-1
+            print(x)
+            camera.yaw = x*sensitivity + start_yaw
+            camera.pitch = -y*sensitivity + start_pitch
         screen.fill((0, 0, 0))
         render(screen, camera, Object)
         #cruiser.location[1] += 0.1

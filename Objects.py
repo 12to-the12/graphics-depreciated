@@ -95,3 +95,46 @@ meshdata =[
         [[-5,-4,0],[-7.5,-2,3],[-7.5,-4,0]],
         [[-5,4,0],[-7.5,4,0],[-7.5,2,3]],
     ]
+
+def init_obj(filename,loc):
+    points = []
+    pointers = []
+    with open(filename) as f:
+        for line in f:
+            line = line.split()
+            if line[0] == 'v':
+                points.append([line[1:],[0,0,0]])
+            if line[0] == 'f':
+                a = line[1]
+                b = line[2]
+                c = line[3]
+                a = a.split('/')[0]
+                b = b.split('/')[0]
+                c = c.split('/')[0]
+                pointers.append([a, b, c])
+    points = np.array(points,dtype='float64')
+    pointers = np.array(pointers,dtype='int')
+    pointers = pointers  # because wavefronts use indexing starting with 1
+    #print(pointers)
+    print(points.shape)
+    print(pointers.shape)
+    pointers -= 1
+    x = pointers.reshape(-1)
+    x = np.sort(x)
+    print(x)
+    mesh = Linked_Mesh(points, pointers)
+    Object(mesh, location = loc)
+    
+    '''
+    suzanne_file = open("suzanne.obj", "r")
+    suzanne = suzanne_file.read()
+    suzanne_file.close()
+    #suzanne = ''.split(suzanne)
+    #print('index:', suzanne.index('o Suzanne'))
+    index = suzanne.index('o Suzanne')
+    suzanne =   suzanne[index:]  
+    
+    suzanne = suzanne.split('\n')
+    print(suzanne)
+    print( len(suzanne)) 
+    '''

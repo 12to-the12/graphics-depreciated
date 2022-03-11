@@ -75,7 +75,13 @@ def build_coords(projected, pointers): #this assumes all vertices are present an
         #print('pointers:',pointers.shape)
         projected = projected.reshape(-1,2)
         pointers = pointers.reshape(-1,1).astype('int')
-        built = projected[pointers]
+        try: built = projected[pointers]
+        except:
+            for x in pointers:
+                pass
+                #print(x)
+            assert 1==2
+
         #print('built:',built.shape)
         built = built.reshape(-1,3,2)
         #print('rebuilt:',built.shape)
