@@ -24,7 +24,7 @@ def project(camera, vertex_data): # plots 3d points in 2d
     assert vertex_data.shape[1] == 3
     
     polar = xcartesian_to_polar(vertex_data)
-    
+    #print('polar:',polar)
     #polar = np.apply_along_axis(cartesian_to_polar, 1, vertex_data )
     
     
@@ -35,6 +35,7 @@ def project(camera, vertex_data): # plots 3d points in 2d
     #print(polar)
     
     camera_direction = np.array( [camera.yaw, camera.pitch] )
+    #print('camera direction:',camera_direction )
     assert 0<=camera.yaw<360
     assert 0<=camera.pitch<360
     #print()
@@ -42,7 +43,8 @@ def project(camera, vertex_data): # plots 3d points in 2d
     #print(relative.reshape(-1,3,2))
     #print(camera.HFOV)
     fractional = relative/camera.HFOV
-    fractional[:,0] = fractional[:,0]*-1 # inverts the yaw because for some reason it's necessary
+    fractional[:,0] = fractional[:,0]*-1
+    fractional[:,1] = fractional[:,1]*-1 # inverts the yaw because for some reason it's necessary
     #print(fractional)
     return fractional
 
@@ -55,6 +57,7 @@ def screensize(surface, coords):# changes fractional coordinates to actual pixel
     assert coords.shape[1] == 2
     coords = coords.reshape(-1,2)
     width, height = surface.get_size()
+    coords[:,0] *= -1
     coords += 1
     coords /= 2
     coords[:,0] *= width
@@ -65,10 +68,16 @@ def transfer_pointers(pointers): # takes pointers and transfers the indexes to t
     pass
 
 def build_coords(projected, pointers): #this assumes all vertices are present and none have been culled
-        projected = projected.reshape(-1,1)
+        assert pointers.shape[1] == 3
+        assert projected.shape[1] == 2
+        #print('projected:',projected.shape)
+        #print('pointers:',pointers.shape)
+        projected = projected.reshape(-1,2)
         pointers = pointers.reshape(-1,1).astype('int')
         built = projected[pointers]
-        built = built.reshape(-1,3,3)
+        #print('built:',built.shape)
+        built = built.reshape(-1,3,2)
+        #print('rebuilt:',built.shape)
         return built
 def filter_pointers(surviving, pointers):#
     mask = np.isin(pointers,surviving)
@@ -86,7 +95,7 @@ def build_polygons(coords, source_vertices, indexed_vertices, object_data): # th
     polygons = polygons.reshape(-1,3,3)
     #print(polygons.shape)
     #print('object data',object_data[:,0].shape)
-
+    
 
     object_data[:, 0] = polygons
     return object_data
@@ -114,7 +123,7 @@ def render(surface, camera, Obj):
     # here we have the relative vertex data
     x = np.arange(absolute.shape[0]).reshape(-1,1) # basically a list of each index along absolute
     indexed_vertices = np.append(absolute, x, axis=1 ) # list of vertices with their index
-    print('indexed vertices',indexed_vertices.shape)
+    #print('indexed vertices',indexed_vertices.shape)
     # we don't need to map vertexes that are occluded, ones facing away, or ones not within the cubic frustrum
     
     # so actually implement that stuff
@@ -125,7 +134,7 @@ def render(surface, camera, Obj):
     #x = distance_cull(x, distance=20)
     
     projected = project(camera, absolute) # returns -0.5 to 0.5  takes list of vertexes (-1,3), returns list of coordinates(-1,2)
-    
+    #print('projected:',projected)
     Stop_Watch.take_time('post project')
     scaled = screensize(surface, projected)
     #print(projected)
@@ -135,24 +144,29 @@ def render(surface, camera, Obj):
     # at this point they're still just pointers
     #coords, polygons = build_polygons(scaled, absolute,indexed_vertices, Obj.object_data) #returns the 3d coords
     
-    
+    #print('pointers:',Obj.object_data[:,0,0])
+    #print('absolute:',absolute)
     
     # TODO clip if all points are outside
     built = build_coords(scaled, Obj.object_data[:,0,0])
+    #print(built)
     
         
     # TODO cull backfaces
     #culled = cull_backfaces(clipped)
     
     Stop_Watch.take_time('scale')
-    '''
+    
     scaled = scaled.reshape(-1,2)
+    '''
     for a in scaled:
         #print('a:',a)
         pass
         draw_circle(surface, a)
         #wireframe_draw(surface, a)
     '''
+    #print('built',built)
+    #print('xxxxxxxxxxxxx')
     for a in built:
         wireframe_draw(surface, a)
     

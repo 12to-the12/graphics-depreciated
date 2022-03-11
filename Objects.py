@@ -26,20 +26,20 @@ polygons = [
     
     ]
 mesh = Linked_Mesh(points, polygons)
-y = 5
+y = 10
 # *2 + 1
-x = 1#15 norm for 1k cubes ~1 ms to project
+x = 15#15 norm for 1k cubes ~1 ms to project
 z = x
 
 def init_cubes():
-    Object(mesh, location=[0,5,0])
-    '''
+    #Object(mesh, location=[0,5,0])
+    
     # 1k  cubes projects in ~50 milliseconds
     for xx in range(-x, x+1):
         if xx%10==0: print(xx)
         for zz in range(-z, z+1):
             Object(mesh, location=[xx*4, y,zz*4])
-    '''
+    
 '''
 boxa = Object(mesh,location=[-5  ,y,0 ] )
 boxb = Object(mesh,location=[-2.5,y,0 ] )

@@ -20,7 +20,8 @@ from Stop_Watch import *
 from time import sleep
 from time import time
 
-sleep(1) 
+Stop_Watch.timing_flag = False
+#sleep(1) 
 pygame.init()
 size = width, height = (1000,1000)
 speed = [1, 1]
@@ -37,7 +38,7 @@ print('xxx')
 #boxa = Object(mesh,location=[0,5,0] )
 a = np.array([ [ -1,0,0],[0,0,-1],[2,2,-1]])
 
-print( xcartesian_to_polar(a) )
+#print( xcartesian_to_polar(a) )
 
 #print(Object.object_data[:,0])
 
@@ -47,12 +48,14 @@ print( xcartesian_to_polar(a) )
 #print(Object.object_data[:,0])
 delta = 0
 
-x = np.array( [  [0,1,0],[-1,0,0], [2,2,2]    ] )
+x = np.array( [  [0,5,0],[-1,5,0], [2,2,2]    ] )
 y = np.array( [  [1,0,0],[1,0,0],[0,-1,-3]  ]    )
 #print(dot_product(x, y))
 #print(angle(x, y))
 #print( normal_vector(x))
 #print('origins:',Object.origin_list)
+#print( xcartesian_to_polar(x))
+#print(         '3d to 2d:', project(camera, x)    )
 
 init_cubes()
 def main(): # this is the main loop where everything happens
@@ -113,7 +116,7 @@ def main(): # this is the main loop where everything happens
         #time.sleep(50000000000000000)
         #print(Object.object_data[:,0,0])
         #print('\n\n\n\n')
-        sleep(0.5)
+        #sleep(0.5)
         print('total:',(time()-stamp)*1000)
         print()
         
