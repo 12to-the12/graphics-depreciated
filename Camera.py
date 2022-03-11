@@ -1,7 +1,7 @@
 import numpy as np
 
 class Camera:
-    def __init__(self, FOV, location=[0,0,0], pitch=0,yaw=0):
+    def __init__(self, FOV=90, location=[0,0,0], pitch=90,yaw=90):
         self.FOV = FOV
         self.HFOV = self.FOV/2 # half FOV
         self.location = np.array(location)
@@ -17,6 +17,9 @@ class Camera:
         pass
     def change_yaw(self, change):
         pass
+    def move(self, dx=0, dy=0, dz=0):
+        self.location = self.location + np.array([dx,dy,dz])
+        self.update_flag = True
     def update_cubecull(self):# cube culling discards positive and negative coords based on their relation to the camera angle
         self.cube_mask = np.full(  (2,2,2), False, dtype='bool')
         # positive is culled, negative is kept

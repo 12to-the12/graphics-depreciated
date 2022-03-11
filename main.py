@@ -21,8 +21,9 @@ from time import sleep
 from time import time
 from numba import jit
 
-import scipy
-#Stop_Watch.timing_flag = False
+print('done importing')
+#import scipy
+Stop_Watch.timing_flag = False
 #sleep(1) 
 pygame.init()
 size = width, height = (1000,1000)
@@ -32,10 +33,10 @@ screen = pygame.display.set_mode(size)#, pygame.FULLSCREEN)
 #print(screen.get_size() )
 
 
-camera = Camera(46.8,location=[0,0,0],pitch=90,yaw=90)# FOV 46.8
+camera = Camera(FOV=46.8,location=[0,0,0],pitch=90,yaw=90)# FOV 46.8
 
 
-print('xxx')
+pygame.mouse.set_visible(False)
 
 #boxa = Object(mesh,location=[0,5,0] )
 a = np.array([ [ -1,0,0],[0,0,-1],[2,2,-1]])
@@ -62,13 +63,21 @@ y = np.array( [  [1,0,0],[1,0,0],[0,-1,-3]  ]    )
 init_cubes()
 def main(): # this is the main loop where everything happens
     stamp = time() 
-    print('start:',stamp)
+    print('start epoch:',stamp)
     #time.sleep(0.5)
     sum = 0
     passed = 0
+
+    move_forward = False
+    move_backward = False
+    move_left = False
+    move_right = False
+    move_up = False
+    move_down = False
     while 1:
-        
-        
+        camera.FOV += 0.1
+        if passed%300==0:print('.')
+        #print(passed)
         delta  = time()-stamp # this thing allows you to track time per frame
         stamp  = time()
         
@@ -85,20 +94,54 @@ def main(): # this is the main loop where everything happens
         # Limit to 60 frames per second
         #clock.tick(24)
         xyz = 2
-        Object.origin_list[:,xyz] = Object.origin_list[:,xyz] + 0.1
-        i = 0
+        #Object.origin_list[:,xyz] = Object.origin_list[:,xyz] + 0.1
+        amount = 0.5
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit()
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
-                i+10
-            elif event.key == pygame.K_s:
-                i+10
-            elif event.key == pygame.K_a:
-                i+10
-            elif event.key == pygame.K_d:
-                i+10
-        
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    move_forward = True
+
+                elif event.key == pygame.K_s:
+                    move_backward = True
+
+                elif event.key == pygame.K_a:
+                    move_left = True
+
+                elif event.key == pygame.K_d:
+                    move_right = True    
+
+                elif event.key == pygame.K_UP:
+                    move_up = True
+
+                elif event.key == pygame.K_DOWN:
+                    move_down = True   
+
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_w:
+                    move_forward = False
+
+                elif event.key == pygame.K_s:
+                    move_backward = False
+
+                elif event.key == pygame.K_a:
+                    move_left = False
+
+                elif event.key == pygame.K_d:
+                    move_right = False  
+
+                elif event.key == pygame.K_UP:
+                    move_up = False
+
+                elif event.key == pygame.K_DOWN:
+                    move_down = False    
+
+        if move_forward:  camera.move(dy= +amount)
+        if move_backward: camera.move(dy= -amount)
+        if move_left:     camera.move(dx= -amount)
+        if move_right:    camera.move(dx= +amount)
+        if move_up:       camera.move(dz= +amount)
+        if move_down:     camera.move(dz= -amount)
         
     
         screen.fill((0, 0, 0))
@@ -120,8 +163,8 @@ def main(): # this is the main loop where everything happens
         #print(Object.object_data[:,0,0])
         #print('\n\n\n\n')
         #sleep(0.5)
-        print('total:',(time()-stamp)*1000)
-        print()
+        #print('total:',(time()-stamp)*1000)
+        #print()
         
 
 

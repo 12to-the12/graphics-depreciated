@@ -27,14 +27,14 @@ polygons = [
     
     ]
 mesh = Linked_Mesh(points, polygons)
-y = 500
+y = 5
 # *2 + 1
-x = 30
+x = 5
 #15 norm for 1k cubes ~1 ms to project
 # 30 yields 61^2 or 29,768 vertices @3 ms projection
 z = x
 spacing = 4
-@jit
+
 def init_cubes():
     #Object(mesh, location=[0,5,0])
     
@@ -42,7 +42,8 @@ def init_cubes():
     for xx in range(-x, x+1):
         if xx%10==0: print(xx)
         for zz in range(-z, z+1):
-            Object(mesh, location=[xx*spacing, y,zz*spacing])
+            for yy in range(-y,y+1):
+                Object(mesh, location=[xx*spacing, yy*spacing,zz*spacing])
     
 '''
 boxa = Object(mesh,location=[-5  ,y,0 ] )

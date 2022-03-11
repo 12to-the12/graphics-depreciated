@@ -19,6 +19,7 @@ def vector_add(a,b):
 class Object:
     object_list = []
     object_data = np.array([]).reshape(0,2,3,3)#first dimension separates objects, second separates vertex references,then uv coords, normals, material reference
+    raw_vertex_data = np.array([]).reshape(0,2,3)
     vertex_data = np.array([]).reshape(0,2,3) # mutable
     origin_list = np.array([]).reshape(0,3) # one entry for each vertex, not each object, better for quick multiplication
     material_list = []
@@ -32,10 +33,12 @@ class Object:
         self.scale = scale
         Object.object_list.append(self)
         
+        self.vertex_data = self.get_scale(self.scale, self.vertex_data)
         vertex_count = self.mesh.points.shape[0]
         #print(vertex_count)
         Object.origin_list = np.append( Object.origin_list, np.full((vertex_count,3),self.location), axis=0)
         Object.object_data = np.append(Object.object_data, self.compile(), axis = 0 )
+        Object.raw_vertex_data = np.append(Object.raw_vertex_data, self.mesh.points,axis=0) 
         Object.vertex_data = np.append(Object.vertex_data, self.mesh.points,axis=0) 
     
     def calc_absolute(): # returns the relative coordinates of the vertex data
@@ -45,12 +48,12 @@ class Object:
         x = Object.vertex_data[:,0]+Object.origin_list
         return  x # shape = (-1,3)
         
-    def calc_relative_to_camera(origin, subject): # returns the relative coordinates of the object data
+    def calc_relative_to_camera(camera, subject): # returns the relative coordinates of the object data
         # input is shape (-1,3), vertex_data
-        assert subject.shape[1]==3
+        assert subject.shape[1:]==(2,3)
         #return mesh - camera
         #print(subject[:,0,:])
-        x = subject - origin
+        x = subject - camera.location
         return x # shape = (-1,3)
     
     def fetch_vectors(obj_data, v_data): # wtf is my life. ndimensional arrays leave me absolutely in awe, using an array as an indice??!!
@@ -67,13 +70,17 @@ class Object:
     
     def translate(self, vector): # outdated
         self.location = self.location + vector
-        Object.origin_list[self.origin_index] = self.location
+        Object.origin_list[self.origin_index:self.vertex_count] = self.location
      
     def global_rotate():
         pass
     
-    def scale():
-        pass
+    def translate_origin(self, vector):
+            self.vertex_list -= vector
+
+    def get_scale(self, x, vertex_list):
+        vertex_list[:,0] = vertex_list[:,0] * x
+        return vertex_list
     
     def compile(self):
         #print('here')

@@ -16,8 +16,8 @@ def draw_circle(surface, coor, color = pygame.Color('lightblue'), radius=1, line
     
 def wireframe_draw(surface, coordinates, color = pygame.Color('lightblue')): # draws a wireframe polygon
     
-    #pygame.gfxdraw.aapolygon(surface,coordinates,color)
-    pygame.gfxdraw.filled_polygon(surface,coordinates,pygame.Color('darkgrey'))
+    pygame.gfxdraw.aapolygon(surface,coordinates,color)
+    #pygame.gfxdraw.filled_polygon(surface,coordinates,pygame.Color('darkgrey'))
 
 
 
@@ -28,7 +28,7 @@ def project(camera, vertex_data): # plots 3d points in 2d
     #print('polar:',polar)
     #polar = np.apply_along_axis(cartesian_to_polar, 1, vertex_data )
     
-    
+
     Stop_Watch.take_time('project')
     
     polar = polar[:,1:] # this line discards the magnitude
@@ -116,14 +116,17 @@ def render(surface, camera, Obj):
     #  [     [[verts](referencing verts), [uvcoords], normal, barycenter]
     Stop_Watch.take_time('starting render')
     
-    
-    absolute = Obj.calc_absolute() # converts object local coordinates to world coordinates
+    if camera.update_flag:
+        #print('updating...')
+        Obj.vertex_data  = Obj.calc_relative_to_camera(camera, Obj.raw_vertex_data)
+        camera.update_flag = False
 
+    absolute = Obj.calc_absolute() # converts object local coordinates to world coordinates
+    #print(absolute)
     Stop_Watch.take_time('absolute') # the class not the module
     
     #print('absolute:',absolute)
-    if camera.update_flag:
-        absolute  = Obj.calc_relative_to_camera(camera.location, absolute)
+    
     
     # here we have the relative vertex data
     x = np.arange(absolute.shape[0]).reshape(-1,1) # basically a list of each index along absolute
@@ -139,19 +142,12 @@ def render(surface, camera, Obj):
     #x = distance_cull(x, distance=20)
     
     projected = project(camera, absolute) # returns -0.5 to 0.5  takes list of vertexes (-1,3), returns list of coordinates(-1,2)
-    #print('projected:',projected)
+    
     Stop_Watch.take_time('post project')
     scaled = screensize(surface, projected)
-    #print(projected)
-    #print(indexed_vertices)
-    #print(Obj.object_data[:,0,0])
-    #print(Obj.object_data)
     # at this point they're still just pointers
     #coords, polygons = build_polygons(scaled, absolute,indexed_vertices, Obj.object_data) #returns the 3d coords
-    
-    #print('pointers:',Obj.object_data[:,0,0])
-    #print('absolute:',absolute)
-    
+
     # TODO clip if all points are outside
     built = build_coords(scaled, Obj.object_data[:,0,0])
     #print(built)
@@ -160,10 +156,9 @@ def render(surface, camera, Obj):
     # TODO cull backfaces
     #culled = cull_backfaces(clipped)
     
-    Stop_Watch.take_time('scale')
     
-    scaled = scaled.reshape(-1,2)
     '''
+    scaled = scaled.reshape(-1,2)
     for a in scaled:
         #print('a:',a)
         pass

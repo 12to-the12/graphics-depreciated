@@ -18,6 +18,7 @@ def barycenter(polygon): # returns the center of the polygon, useful for the pai
     z = (z1 + z2 + z3) / 3
     return (x, y, z)
 
+
 def hypotenuse(coor):
     x, y = coor
     x = abs(x)
@@ -35,7 +36,7 @@ def normalize(vector_list): # operates on array of vectors
     mag_list = magnitude(vector_list)
     return vector_list / mag_list[:,None]
 
-@jit(parallel=True)
+#@jit(parallel=True)
 def xcartesian_to_polar(vertex_list):# works
     # yaw starts from positive x, counter clockwise
     # pitch starts from positive z, moves down from there
