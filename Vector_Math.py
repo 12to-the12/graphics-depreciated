@@ -5,7 +5,7 @@ from math import acos, atan
 from math import degrees, radians
 import time
 from Stop_Watch import *
-
+from numba import jit
 def clean(x):
     return round(x*1000)/1000
 def barycenter(polygon): # returns the center of the polygon, useful for the painter's algorithm
@@ -35,6 +35,7 @@ def normalize(vector_list): # operates on array of vectors
     mag_list = magnitude(vector_list)
     return vector_list / mag_list[:,None]
 
+@jit(parallel=True)
 def xcartesian_to_polar(vertex_list):# works
     # yaw starts from positive x, counter clockwise
     # pitch starts from positive z, moves down from there
@@ -43,7 +44,8 @@ def xcartesian_to_polar(vertex_list):# works
     y = vertex_list[:,1]
     z = vertex_list[:,2]
 
-    r = magnitude(vertex_list)
+    #r = magnitude(vertex_list)
+    r = np.sqrt((x**2 + y**2 + z**2))
     yaw = np.arctan2(y, x,) # smart arctan works for any angle
     yaw = np.where(yaw<0, np.deg2rad(360)+yaw, yaw) # adds to negative
     pitch = np.arccos(z/r)

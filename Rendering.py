@@ -15,8 +15,9 @@ def draw_circle(surface, coor, color = pygame.Color('lightblue'), radius=1, line
     pygame.draw.circle(surface, color, coor, radius, line_weight)
     
 def wireframe_draw(surface, coordinates, color = pygame.Color('lightblue')): # draws a wireframe polygon
-    #pygame.gfxdraw.filled_polygon(surface,coordinates,pygame.Color('darkgrey'))
-    pygame.gfxdraw.aapolygon(surface,coordinates,color)
+    
+    #pygame.gfxdraw.aapolygon(surface,coordinates,color)
+    pygame.gfxdraw.filled_polygon(surface,coordinates,pygame.Color('darkgrey'))
 
 
 
@@ -43,8 +44,8 @@ def project(camera, vertex_data): # plots 3d points in 2d
     #print(relative.reshape(-1,3,2))
     #print(camera.HFOV)
     fractional = relative/camera.HFOV
-    fractional[:,0] = fractional[:,0]*-1
-    fractional[:,1] = fractional[:,1]*-1 # inverts the yaw because for some reason it's necessary
+    #fractional[:,0] = fractional[:,0]*-1
+    #fractional[:,1] = fractional[:,1]*-1 # inverts the yaw because for some reason it's necessary
     #print(fractional)
     return fractional
 
@@ -104,6 +105,10 @@ def build_polygons(coords, source_vertices, indexed_vertices, object_data): # th
 
 
     quit()
+
+def draw_polygons(surface, built):
+    for a in built:
+        wireframe_draw(surface, a)
 
 
 def render(surface, camera, Obj):
@@ -167,12 +172,11 @@ def render(surface, camera, Obj):
     '''
     #print('built',built)
     #print('xxxxxxxxxxxxx')
-    for a in built:
-        wireframe_draw(surface, a)
     
     Stop_Watch.take_time('draw')
     epoch = time()
     
+    draw_polygons(surface, built)
     # should now only include faces that will show up and are facing the camera
     
     # TODO sort by barycenter distance for occlusion

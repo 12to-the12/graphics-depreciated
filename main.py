@@ -19,8 +19,10 @@ from Objects import *
 from Stop_Watch import *
 from time import sleep
 from time import time
+from numba import jit
 
-Stop_Watch.timing_flag = False
+import scipy
+#Stop_Watch.timing_flag = False
 #sleep(1) 
 pygame.init()
 size = width, height = (1000,1000)
@@ -82,7 +84,8 @@ def main(): # this is the main loop where everything happens
         #clock = pygame.time.Clock()
         # Limit to 60 frames per second
         #clock.tick(24)
-        Object.origin_list[:,1] = Object.origin_list[:,1] + 0.1
+        xyz = 2
+        Object.origin_list[:,xyz] = Object.origin_list[:,xyz] + 0.1
         i = 0
         for event in pygame.event.get():
             if event.type == pygame.QUIT: sys.exit()
