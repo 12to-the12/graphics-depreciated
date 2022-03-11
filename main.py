@@ -67,8 +67,8 @@ y = np.array( [  [1,0,0],[1,0,0],[0,-1,-3]  ]    )
 #print(         '3d to 2d:', project(camera, x)    )
 
 #init_cubes()
-init_obj('dp.obj', [0,5,0])
-init_obj('johann.obj', [0,5,0])
+init_obj('danny.obj', [0,5,3])
+init_obj('text.obj', [0,5,0])
 def main(): # this is the main loop where everything happens
     stamp = time() 
     print('start epoch:',stamp)
