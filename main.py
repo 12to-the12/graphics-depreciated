@@ -26,7 +26,7 @@ print('done importing')
 Stop_Watch.timing_flag = False
 #sleep(1) 
 pygame.init()
-size = width, height = (2000,2000)
+size = width, height = (1000,1000)
 speed = [1, 1]
 screen = pygame.display.set_mode(size)#, pygame.FULLSCREEN)
 
@@ -154,21 +154,21 @@ def main(): # this is the main loop where everything happens
                 elif event.key == pygame.K_DOWN:
                     move_down = False    
 
-        if move_forward:  camera.move(dy= +amount)
-        if move_backward: camera.move(dy= -amount)
-        if move_left:     camera.move(dx= -amount)
-        if move_right:    camera.move(dx= +amount)
-        if move_up:       camera.move(dz= +amount)
-        if move_down:     camera.move(dz= -amount)
+        if move_forward:  camera.move(amount*+camera.y_vector)
+        if move_backward: camera.move(amount*-camera.y_vector)
+        if move_left:     camera.move(amount*-camera.x_vector)
+        if move_right:    camera.move(amount*+camera.x_vector)
+        if move_up:       camera.move([0,0,+amount])
+        if move_down:     camera.move([0,0,-amount])
         if update_rotation:
             pos = pygame.mouse.get_pos()
             size = screen.get_size()
             x = (pos[0]-initial_pos[0]) / size[0]
             y = (pos[1]-initial_pos[1]) / size[1]
             #x = (x*2)-1
-            print(x)
-            camera.yaw = x*sensitivity + start_yaw
-            camera.pitch = -y*sensitivity + start_pitch
+            #print(x)
+            camera.set_yaw( x*sensitivity + start_yaw )
+            camera.set_pitch( -y*sensitivity + start_pitch )
         screen.fill((0, 0, 0))
         render(screen, camera, Object)
         #cruiser.location[1] += 0.1

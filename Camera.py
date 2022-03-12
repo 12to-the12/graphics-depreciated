@@ -1,5 +1,5 @@
 import numpy as np
-
+from Vector_Math import *
 class Camera:
     def __init__(self, FOV=90, location=[0,0,0], pitch=90,yaw=90):
         self.FOV = FOV
@@ -8,17 +8,20 @@ class Camera:
         self.pitch = pitch
         self.yaw = yaw
         self.update_flag = False
-        self.update_cubecull()
-    def set_pitch(self, pitch): #positive pitch is to the left, 0 is towards positive x
-        pass
-    def change_pitch(self, change):
-        pass
-    def set_yaw(self, pitch): #positive yaw is down, 0 is toward positive z
-        pass
-    def change_yaw(self, change):
-        pass
-    def move(self, dx=0, dy=0, dz=0):
-        self.location = self.location + np.array([dx,dy,dz])
+        self.update_view_vectors()
+        #self.update_cubecull()
+    def update_view_vectors(self):
+        self.x_vector = polar_to_cartesian([1, self.yaw-90, self.pitch])
+        self.y_vector = polar_to_cartesian([1, self.yaw, self.pitch])
+        #self.z_vector = polar_to_cartesian([1, self.yaw, self.pitch])
+    def set_yaw(self, yaw):
+        self.yaw = yaw
+        self.update_view_vectors()
+    def set_pitch(self, pitch):
+        self.pitch = pitch
+        self.update_view_vectors()
+    def move(self, vector):
+        self.location = self.location + vector
         self.update_flag = True
     def update_cubecull(self):# cube culling discards positive and negative coords based on their relation to the camera angle
         self.cube_mask = np.full(  (2,2,2), False, dtype='bool')

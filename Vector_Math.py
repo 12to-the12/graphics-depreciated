@@ -79,7 +79,9 @@ def cartesian_to_polar(vector): # starts from positive x, counter clockwise
     
 def polar_to_cartesian(vector): # this took hours jesus, now it's outdated
     r, theta, phi = vector
-    assert theta>0 # you know what you have to do
+    theta %= 360
+    print(theta)
+    assert theta>=0 # you know what you have to do
     assert theta<360
     assert phi>0
     assert phi<360
@@ -92,7 +94,7 @@ def polar_to_cartesian(vector): # this took hours jesus, now it's outdated
     x = clean(x)
     y = clean(y)
     z = clean(z)
-    return (x, y, z)
+    return np.array([x, y, z])
     
     
 def normal_vector(polygon_list): # finds the normal of a list of polygons
