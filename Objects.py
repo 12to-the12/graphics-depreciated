@@ -116,12 +116,12 @@ def init_obj(filename,loc):
     pointers = np.array(pointers,dtype='int')
     pointers = pointers  # because wavefronts use indexing starting with 1
     #print(pointers)
-    print(points.shape)
-    print(pointers.shape)
+    #print(points.shape)
+    #print(pointers.shape)
     pointers -= 1
     x = pointers.reshape(-1)
     x = np.sort(x)
-    print(x)
+    #print(x)
     mesh = Linked_Mesh(points, pointers)
     Object(mesh, location = loc)
     

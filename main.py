@@ -37,13 +37,14 @@ screen = pygame.display.set_mode(size)#, pygame.FULLSCREEN)
 
 camera = Camera(FOV=46.8,location=[0,0,0],pitch=90,yaw=90)# FOV 46.8
 
-world = Scene()
+world = Scene(active_camera=camera)
 
 
 #init_cubes()
 init_obj('danny.obj', [0,5,3])
 init_obj('text.obj', [0,5,0])
 def main(): # this is the main loop where everything happens
+    world.vertexes = world.raw_vertexes
     stamp = time() 
     print('start epoch:',stamp)
     #time.sleep(0.5)

@@ -80,7 +80,7 @@ def cartesian_to_polar(vector): # starts from positive x, counter clockwise
 def polar_to_cartesian(vector): # this took hours jesus, now it's outdated
     r, theta, phi = vector
     theta %= 360
-    print(theta)
+    #print(theta)
     assert theta>=0 # you know what you have to do
     assert theta<360
     assert phi>0

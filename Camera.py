@@ -7,7 +7,7 @@ class Camera:
         self.location = np.array(location)
         self.pitch = pitch
         self.yaw = yaw
-        self.update_flag = False
+        self.update_flag = True
         self.update_view_vectors()
         #self.update_cubecull()
     def update_view_vectors(self):

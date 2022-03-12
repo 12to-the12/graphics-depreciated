@@ -124,12 +124,8 @@ def render(surface, camera, Obj):
     #  [     [[verts](referencing verts), [uvcoords], normal, barycenter]
     Stop_Watch.take_time('starting render')
     
-    if camera.update_flag:
-        #print('updating...')
-        Obj.vertex_data  = Obj.calc_relative_to_camera(camera, Obj.raw_vertex_data)
-        camera.update_flag = False
 
-    absolute = Obj.calc_absolute() # converts object local coordinates to world coordinates
+    absolute = Scene.active_scene.calc_cam_space()
     #print(absolute)
     Stop_Watch.take_time('absolute') # the class not the module
     

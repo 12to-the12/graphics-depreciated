@@ -37,6 +37,17 @@ class Object:
         self.vertex_data = self.get_scale(self.scale, self.vertex_data)
         vertex_count = self.mesh.points.shape[0]
         #print(vertex_count)
+        world = Scene.active_scene
+
+        
+        world.extend_pointers(self.mesh.linked_polygons)
+
+        #print('self.mesh.points[:,0].shape: ', self.mesh.points[:,0].shape)
+        world.extend_raw_vertexes(self.mesh.points[:,0])
+        #print('vertex_count: ',vertex_count)
+        #print('np.full((vertex_count,3),self.location).shape: ', np.full((vertex_count,3),self.location).shape)
+        world.extend_origin_list(  np.full((vertex_count,3),self.location)  )
+        
         Object.origin_list = np.append( Object.origin_list, np.full((vertex_count,3),self.location), axis=0)
         Object.object_data = np.append(Object.object_data, self.compile(), axis = 0 )
         Object.raw_vertex_data = np.append(Object.raw_vertex_data, self.mesh.points,axis=0) 
