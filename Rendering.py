@@ -119,47 +119,30 @@ def draw_polygons(surface, built):
         wireframe_draw(surface, a)
 
 
-def render(surface, camera, Obj):
-    # the best way to organize the data is just to have a massive list of all the object data that can be culled and sorted each run, lots of references to immutable data too, like textures
-    #  [     [[verts](referencing verts), [uvcoords], normal, barycenter]
+def render(surface, camera):
+    surface.fill((0, 0, 0))
+
     Stop_Watch.take_time('starting render')
     
-
     absolute = Scene.active_scene.calc_cam_space()
-    #print(absolute)
+
     Stop_Watch.take_time('absolute') # the class not the module
     
-    #print('absolute:',absolute)
-    
-    
-    # here we have the relative vertex data
-    x = np.arange(absolute.shape[0]).reshape(-1,1) # basically a list of each index along absolute
-    indexed_vertices = np.append(absolute, x, axis=1 ) # list of vertices with their index
-    #print('indexed vertices',indexed_vertices.shape)
+
     # we don't need to map vertexes that are occluded, ones facing away, or ones not within the cubic frustrum
     
-    # so actually implement that stuff
-    # TODO cube frustrum cull
     # TODO distance cull
-    #x = cube_cull(camera, indexed_vertices)
-    #quit()
-    #x = distance_cull(x, distance=20)
     
     projected = project(camera, absolute) # returns -0.5 to 0.5  takes list of vertexes (-1,3), returns list of coordinates(-1,2)
     
     Stop_Watch.take_time('post project')
+
     scaled = screensize(surface, projected)
-    # at this point they're still just pointers
-    #coords, polygons = build_polygons(scaled, absolute,indexed_vertices, Obj.object_data) #returns the 3d coords
 
     # TODO clip if all points are outside
-    built = build_coords(scaled, Obj.object_data[:,0,0])
-    #print(built)
+    built = build_coords(scaled, Scene.active_scene.pointers)
     
-        
     # TODO cull backfaces
-    #culled = cull_backfaces(clipped)
-    
     
     '''
     scaled = scaled.reshape(-1,2)
@@ -169,20 +152,12 @@ def render(surface, camera, Obj):
         draw_circle(surface, a)
         #wireframe_draw(surface, a)
     '''
-    #print('built',built)
-    #print('xxxxxxxxxxxxx')
-    
-    Stop_Watch.take_time('draw')
-    epoch = time()
-    
+
     draw_polygons(surface, built)
-    # should now only include faces that will show up and are facing the camera
-    
-    # TODO sort by barycenter distance for occlusion
-    #
-    # TODO shade
-    
-    # TODO draw
+
+    Stop_Watch.take_time('draw')
+
+    pygame.display.flip()
     
     
 

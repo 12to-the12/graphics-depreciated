@@ -25,10 +25,11 @@ from numba import jit
 
 print('done importing')
 #import scipy
-Stop_Watch.timing_flag = False
+Stop_Watch.timing_flag = True
 #sleep(1) 
 pygame.init()
-size = width, height = (1000,1000)
+size = 1000
+size = width, height = (size,size)
 speed = [1, 1]
 screen = pygame.display.set_mode(size)#, pygame.FULLSCREEN)
 
@@ -44,9 +45,10 @@ world = Scene(active_camera=camera)
 init_obj('danny.obj', [0,5,3])
 init_obj('text.obj', [0,5,0])
 def main(): # this is the main loop where everything happens
+    print('entering main loop')
     world.vertexes = world.raw_vertexes
     stamp = time() 
-    print('start epoch:',stamp)
+    #print('start epoch:',stamp)
     #time.sleep(0.5)
     sum = 0
     passed = 0
@@ -61,9 +63,8 @@ def main(): # this is the main loop where everything happens
     update_rotation = False
     sensitivity = 100
     while 1:
-        #camera.FOV += 0.1
-        if passed%300==0:print('.')
-        #print(passed)
+        if Stop_Watch.loops%Stop_Watch.frequency==0:
+            print('.')
         delta  = time()-stamp # this thing allows you to track time per frame
         stamp  = time()
         
@@ -73,7 +74,8 @@ def main(): # this is the main loop where everything happens
         if passed>100: 
             passed = 0
             sum = 0
-        passed += 1
+        
+        #print(passed)
         #print(1/delta)
         #print('FPS:',(passed/(sum+0.01))  )
         #clock = pygame.time.Clock()
@@ -141,32 +143,14 @@ def main(): # this is the main loop where everything happens
             size = screen.get_size()
             x = (pos[0]-initial_pos[0]) / size[0]
             y = (pos[1]-initial_pos[1]) / size[1]
-            #x = (x*2)-1
-            #print(x)
+            
             camera.set_yaw( x*sensitivity + start_yaw )
             camera.set_pitch( -y*sensitivity + start_pitch )
-        screen.fill((0, 0, 0))
-        render(screen, camera, Object)
-        #cruiser.location[1] += 0.1
-        #box.location[2] += 0.01
-        #camera.location[2] += 0.05
-        #camera.pitch += 0.1
         
-        #camera.location[2] += 0.1
         
-        #pygame.gfxdraw.aapolygon(screen, [[300, 300], [i, i],[100, 300]],(255, 0, 0))
-        #screen.blit(bouncer, (rect.x, rect.y))
-        
-        #print(i)
-        
-        pygame.display.flip()
-        #time.sleep(50000000000000000)
-        #print(Object.object_data[:,0,0])
-        #print('\n\n\n\n')
-        #sleep(0.5)
-        #print('total:',(time()-stamp)*1000)
-        #print()
-        
+        render(screen, camera)
+        Stop_Watch.loops += 1
+
 
 
 main()

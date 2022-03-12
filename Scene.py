@@ -35,7 +35,8 @@ class Scene:
     # updates assume they are operating within the bounds of the existing array
     def extend_pointers(self, x): 
         assert x.shape[1] == 3
-        print(self.pointers)
+        existing = self.raw_vertexes.shape[0] # this is the number of existing vertexes
+        x = x + existing # this way the pointers line up correctly
         self.pointers = np.append(self.pointers, x, axis=0)
     
     def extend_raw_vertexes(self, x):

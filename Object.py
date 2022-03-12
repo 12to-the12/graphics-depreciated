@@ -94,7 +94,7 @@ class Object:
         vertex_list[:,0] = vertex_list[:,0] * x
         return vertex_list
     
-    def compile(self):
+    def compile(self):# I'm going to leave this here as a testament to how shitty this code used to be
         #print('here')
         elements = self.mesh.linked_polygons.shape[0]
         polygon_data = np.zeros((elements,2,3,3))
