@@ -2,6 +2,7 @@ import numpy as np
 import Vector_Math
 
 from Mesh import *
+from Scene import Scene
 #from Material import *
 
 def vector_add(a,b):

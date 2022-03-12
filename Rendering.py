@@ -9,6 +9,7 @@ from math import tan
 from math import degrees
 from Vector_Math import *
 from Stop_Watch import *
+from Scene import Scene
 
     
 def draw_circle(surface, coor, color = pygame.Color('lightblue'), radius=1, line_weight=1):

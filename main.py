@@ -1,4 +1,4 @@
-# I'm sorry I didn't comment better. Just remember Object.object_data is the important thing
+# I'm sorry I didn't comment better
 #
 import sys, pygame
 from pygame import gfxdraw
@@ -17,6 +17,8 @@ from Vector_Math import *
 from Rendering import *
 from Objects import *
 from Stop_Watch import *
+from Scene import Scene
+
 from time import sleep
 from time import time
 from numba import jit
@@ -35,36 +37,8 @@ screen = pygame.display.set_mode(size)#, pygame.FULLSCREEN)
 
 camera = Camera(FOV=46.8,location=[0,0,0],pitch=90,yaw=90)# FOV 46.8
 
+world = Scene()
 
-#pygame.mouse.set_visible(False)
-
-#boxa = Object(mesh,location=[0,5,0] )
-a = np.array([ [ -1,0,0],[0,0,-1],[2,2,-1]])
-
-#print( xcartesian_to_polar(a) )
-
-
-
-
-
-
-
-#print(Object.object_data[:,0])
-
-
-#Object.object_data = Object.fetch_vectors(Object.object_data, Object.vertex_data)
-
-#print(Object.object_data[:,0])
-delta = 0
-
-x = np.array( [  [0,5,0],[-1,5,0], [2,2,2]    ] )
-y = np.array( [  [1,0,0],[1,0,0],[0,-1,-3]  ]    )
-#print(dot_product(x, y))
-#print(angle(x, y))
-#print( normal_vector(x))
-#print('origins:',Object.origin_list)
-#print( xcartesian_to_polar(x))
-#print(         '3d to 2d:', project(camera, x)    )
 
 #init_cubes()
 init_obj('danny.obj', [0,5,3])
@@ -117,6 +91,7 @@ def main(): # this is the main loop where everything happens
             if event.type == pygame.MOUSEBUTTONUP:
                 update_rotation = False
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE: sys.exit()
                 if event.key == pygame.K_w:
                     move_forward = True
 
