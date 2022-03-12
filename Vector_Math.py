@@ -36,7 +36,7 @@ def normalize(vector_list): # operates on array of vectors
     mag_list = magnitude(vector_list)
     return vector_list / mag_list[:,None]
 
-#@jit(parallel=True)
+@jit(nopython=True, parallel=True)
 def xcartesian_to_polar(vertex_list):# works
     # yaw starts from positive x, counter clockwise
     # pitch starts from positive z, moves down from there
@@ -57,6 +57,7 @@ def xcartesian_to_polar(vertex_list):# works
     polar = np.concatenate( (r, yaw, pitch), axis=1 )
     return polar
 
+
 def cartesian_to_polar(vector): # starts from positive x, counter clockwise
     #stamp = time.time()
     x, y, z = vector
@@ -76,8 +77,10 @@ def cartesian_to_polar(vector): # starts from positive x, counter clockwise
     if x<0: theta += 180
     phi = degrees(phi)
     return (r, theta, phi)
-    
-def polar_to_cartesian(vector): # this took hours jesus, now it's outdated
+
+
+def polar_to_cartesian(vector):# only operates on single vector
+    # this took hours jesus, now it's outdated
     r, theta, phi = vector
     theta %= 360
     #print(theta)
@@ -91,9 +94,6 @@ def polar_to_cartesian(vector): # this took hours jesus, now it's outdated
     x = r * sin(phi) * cos(theta)
     y = r * sin(phi) * sin(theta)
     z = r * cos(phi)
-    x = clean(x)
-    y = clean(y)
-    z = clean(z)
     return np.array([x, y, z])
     
     

@@ -29,7 +29,7 @@ polygons = [
 mesh = Linked_Mesh(points, polygons)
 y = 10
 # *2 + 1
-x = 30
+x = 15
 #15 norm for 1k cubes ~1 ms to project
 # 30 yields 61^2 or 29,768 vertices @3 ms projection
 z = x
@@ -37,8 +37,8 @@ spacing = 0.5
 
 def init_cubes():
     #Object(mesh, location=[0,5,0])
-    print('initializing ',(x*2+1)*(z*2+1),' cubes')
-    print('initializing ',(x*2+1)*(z*2+1)*12,' tris')
+    print(f'initializing {(x*2+1)*(z*2+1):,} cubes')
+    print(f'initializing {(x*2+1)*(z*2+1)*12:,} tris')
     # 1k  cubes projects in ~50 milliseconds
     for xx in range(-x, x+1):
         if xx%10==0: print(xx)

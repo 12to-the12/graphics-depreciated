@@ -1,3 +1,4 @@
+from cmath import nan
 import sys, pygame
 from pygame import gfxdraw
 
@@ -12,13 +13,25 @@ from Stop_Watch import *
 from Scene import Scene
 
     
-def draw_circle(surface, coor, color = pygame.Color('lightblue'), radius=1, line_weight=1):
+def draw_point(surface, coor, color = pygame.Color('lightblue'), radius=5, line_weight=1):
     pygame.draw.circle(surface, color, coor, radius, line_weight)
+
+def draw_points(surface, coordinates):
+    for x in coordinates:
+        draw_point(surface, x)
     
+
 def wireframe_draw(surface, coordinates, color = pygame.Color('lightblue')): # draws a wireframe polygon
-    
     pygame.gfxdraw.aapolygon(surface,coordinates,color)
     #pygame.gfxdraw.filled_polygon(surface,coordinates,pygame.Color('darkgrey'))
+
+def draw_polygons(surface, built):
+    for x in built:
+        wireframe_draw(surface, x)
+
+
+
+
 
 
 
@@ -30,8 +43,10 @@ def project(camera, vertex_data): # plots 3d points in 2d
     #polar = np.apply_along_axis(cartesian_to_polar, 1, vertex_data )
     
 
-    
+    Stop_Watch.take_time('projection')
+
     polar = polar[:,1:] # this line discards the magnitude
+    
     
     #print(polar)
     
@@ -50,10 +65,11 @@ def project(camera, vertex_data): # plots 3d points in 2d
     #print(fractional)
     return fractional
 
-
+def cull_offscreen(vertex_list):
+    onscreen = np.where(-1<vertex_list, np.where(vertex_list<1, nan), nan)
+    any = np.any(onscreen)
+    return np.where()
     
-def clip_outside(projected):  # incomplete
-    a = (-0.5<a[0]<0.5) & (-0.5<a[0]<0.5)
 
 def screensize(surface, coords):# changes fractional coordinates to actual pixel numbers
     assert coords.shape[1] == 2
@@ -66,8 +82,7 @@ def screensize(surface, coords):# changes fractional coordinates to actual pixel
     coords[:,1] *= height# this method doesn't avoid distortion
     return coords
 
-def transfer_pointers(pointers): # takes pointers and transfers the indexes to the surviving polygons
-    pass
+
 
 def build_coords(projected, pointers): #this assumes all vertices are present and none have been culled
         assert pointers.shape[1] == 3
@@ -87,75 +102,41 @@ def build_coords(projected, pointers): #this assumes all vertices are present an
         built = built.reshape(-1,3,2)
         #print('rebuilt:',built.shape)
         return built
-def filter_pointers(surviving, pointers):#
-    mask = np.isin(pointers,surviving)
-    mask = mask.reshape(-1,3)
-    any = np.any(mask, axis=0)
-
-    
-def build_polygons(coords, source_vertices, indexed_vertices, object_data): # this also checks for missing and discards the polygons if they're not all there
-    surviving = indexed_vertices[:,3].astype('int')
-    pointers = object_data[:, 0,0].reshape(-1,1).astype('int')
-    # TODO filtered_pointers = filter_pointers(surviving, pointers)
-    filtered_pointers = pointers
-    source_vertices = source_vertices.reshape(-1,3)
-    polygons = source_vertices[filtered_pointers]
-    polygons = polygons.reshape(-1,3,3)
-    #print(polygons.shape)
-    #print('object data',object_data[:,0].shape)
-    
-
-    object_data[:, 0] = polygons
-    return object_data
 
 
-
-
-    quit()
-
-def draw_polygons(surface, built):
-    for a in built:
-        wireframe_draw(surface, a)
 
 
 def render(surface, camera):
     surface.fill((0, 0, 0))
 
-    
-    absolute = Scene.active_scene.calc_cam_space()
+    scene = Scene.active_scene
+    camera_space_vertexes = scene.calc_cam_space()
 
     
 
-    # we don't need to map vertexes that are occluded, ones facing away, or ones not within the cubic frustrum
+    # we don't need to map vertexes that are occluded, or ones facing away
     
     # TODO distance cull
+    Stop_Watch.take_time('relativity')
+    projected = project(camera, camera_space_vertexes) # returns -0.5 to 0.5  takes list of vertexes (-1,3), returns list of coordinates(-1,2)
     
-    projected = project(camera, absolute) # returns -0.5 to 0.5  takes list of vertexes (-1,3), returns list of coordinates(-1,2)
-    
-    Stop_Watch.take_time('projection')
+    Stop_Watch.take_time('post projection')
 
+    #projected = cull_offscreen(projected)
     scaled = screensize(surface, projected)
 
     # TODO clip if all points are outside
-    built = build_coords(scaled, Scene.active_scene.pointers)
+    built = build_coords(scaled, scene.pointers)
     
     # TODO cull backfaces
-    
-    '''
-    scaled = scaled.reshape(-1,2)
-    for a in scaled:
-        #print('a:',a)
-        pass
-        draw_circle(surface, a)
-        #wireframe_draw(surface, a)
-    '''
+    Stop_Watch.take_time('building')
+    #draw_points(surface, built.reshape(-1,2))
     #print('built:',built.shape[0])
     draw_polygons(surface, built)
 
     Stop_Watch.take_time('drawing')
 
     pygame.display.flip()
-    Stop_Watch.take_time('flipping display')
     
     
 

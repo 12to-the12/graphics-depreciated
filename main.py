@@ -42,13 +42,13 @@ camera = Camera(FOV=46.8,location=[0,0,0],pitch=90,yaw=90)# FOV 46.8
 world = Scene(active_camera=camera)
 
 
-#init_cubes()
+init_cubes()
 #init_obj('danny.obj', [0,5,3])
 #init_obj('danny.obj', [0,5,0])
-init_obj('danny.obj', [0,5,3-1])
-init_obj('text.obj', [0,5,0])
+#init_obj('danny.obj', [0,5,3-1])
+#init_obj('text.obj', [0,5,0])
 
-Stop_Watch.frequency = 20
+
 def main(): # this is the main loop where everything happens
     print('entering main loop\n\n')
     world.vertexes = world.raw_vertexes
@@ -68,11 +68,15 @@ def main(): # this is the main loop where everything happens
     update_rotation = False
     sensitivity = 250
     move_mult = 0.1
+    Stop_Watch.frequency = 100
+    Stop_Watch.epoch = time()
     while 1:
-        Stop_Watch.take_time('starta')
-        if Stop_Watch.loops%Stop_Watch.frequency==0:
+        if Stop_Watch.loops%Stop_Watch.frequency==1:
             print('total: ',(sum/Stop_Watch.loops)*1000)
             print('.')
+            sum = 0
+            Stop_Watch.breakpoints.clear()
+            Stop_Watch.loops = 1
         delta  = time()-stamp # this thing allows you to track time per frame
         stamp  = time()
         sum += delta
@@ -80,7 +84,6 @@ def main(): # this is the main loop where everything happens
         #clock = pygame.time.Clock()
         # Limit to 60 frames per second
         #clock.tick(24)
-        Stop_Watch.take_time('startb')
         i = 0
         for event in pygame.event.get():
             i += 1

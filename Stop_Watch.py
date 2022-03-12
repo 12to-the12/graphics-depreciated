@@ -2,7 +2,7 @@ from time import time
 
 class Stop_Watch(): # allows you to check how long things take to run
     timing_flag = True # this 
-    epoch = time() # this gets the # seconds since 1970
+    #epoch = time() # this gets the # seconds since 1970
     breakpoints = {} #key is message, value is sum instances list
     frequency = 25# actually inverse of frequency
     loops = 1
