@@ -4,7 +4,7 @@ class Stop_Watch(): # allows you to check how long things take to run
     timing_flag = True # this 
     epoch = time() # this gets the # seconds since 1970
     breakpoints = {} #key is message, value is sum instances list
-    frequency = 100# actually inverse of frequency
+    frequency = 25# actually inverse of frequency
     loops = 1
     def take_time(message):
         time_taken = (time()-Stop_Watch.epoch) # in seconds

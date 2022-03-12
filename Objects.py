@@ -27,23 +27,23 @@ polygons = [
     
     ]
 mesh = Linked_Mesh(points, polygons)
-y = 5
+y = 10
 # *2 + 1
-x = 5
+x = 30
 #15 norm for 1k cubes ~1 ms to project
 # 30 yields 61^2 or 29,768 vertices @3 ms projection
 z = x
-spacing = 4
+spacing = 0.5
 
 def init_cubes():
     #Object(mesh, location=[0,5,0])
-    
+    print('initializing ',(x*2+1)*(z*2+1),' cubes')
+    print('initializing ',(x*2+1)*(z*2+1)*12,' tris')
     # 1k  cubes projects in ~50 milliseconds
     for xx in range(-x, x+1):
         if xx%10==0: print(xx)
         for zz in range(-z, z+1):
-            for yy in range(-y,y+1):
-                Object(mesh, location=[xx*spacing, yy*spacing,zz*spacing])
+            Object(mesh, location=[xx*spacing, y,zz*spacing])
     
 '''
 boxa = Object(mesh,location=[-5  ,y,0 ] )
@@ -114,6 +114,7 @@ def init_obj(filename,loc):
                 pointers.append([a, b, c])
     points = np.array(points,dtype='float64')
     pointers = np.array(pointers,dtype='int')
+    print('initializing ',pointers.shape[0],' tris')
     pointers = pointers  # because wavefronts use indexing starting with 1
     #print(pointers)
     #print(points.shape)

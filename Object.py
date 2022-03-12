@@ -3,27 +3,13 @@ import Vector_Math
 
 from Mesh import *
 from Scene import Scene
-#from Material import *
 
-def vector_add(a,b):
-    #print(a)
-    #print(b)
-    x1, y1, z1 = a
-    x2, y2, z2 = b
-    x = x1+x2
-    y = y1+y2
-    z = z1+z2
-    return [x, y, z]
+
 
 
             
 class Object:
-    object_list = []
-    object_data = np.array([]).reshape(0,2,3,3)#first dimension separates objects, second separates vertex references,then uv coords, normals, material reference
-    raw_vertex_data = np.array([]).reshape(0,2,3)
-    vertex_data = np.array([]).reshape(0,2,3) # mutable
-    origin_list = np.array([]).reshape(0,3) # one entry for each vertex, not each object, better for quick multiplication
-    material_list = []
+    x = np.array([])
     def __init__(self, mesh, shader = None, name='untitled', location=[0,0,0], rotation=[0,0,0], scale=[1,1,1], uv_map = None, shadow_map = None):
         self.mesh = mesh
         self.shader = shader
@@ -32,68 +18,72 @@ class Object:
         
         self.rotation = rotation
         self.scale = scale
-        Object.object_list.append(self)
+        #Scene.object_list.append(self)
         
-        self.vertex_data = self.get_scale(self.scale, self.vertex_data)
-        vertex_count = self.mesh.points.shape[0]
+        self.vertex_count = self.mesh.points.shape[0]
+        self.index = Scene.active_scene.raw_vertexes.shape[0]
         #print(vertex_count)
-        world = Scene.active_scene
+        self.scene = Scene.active_scene
 
-        
-        world.extend_pointers(self.mesh.linked_polygons)
+        Object.x = np.append(Object.x, self)
+
+        self.scene.extend_pointers(self.mesh.linked_polygons)
 
         #print('self.mesh.points[:,0].shape: ', self.mesh.points[:,0].shape)
-        world.extend_raw_vertexes(self.mesh.points[:,0])
+        self.scene.extend_raw_vertexes(self.mesh.points[:,0])
         #print('vertex_count: ',vertex_count)
         #print('np.full((vertex_count,3),self.location).shape: ', np.full((vertex_count,3),self.location).shape)
-        world.extend_origin_list(  np.full((vertex_count,3),self.location)  )
-        
-        Object.origin_list = np.append( Object.origin_list, np.full((vertex_count,3),self.location), axis=0)
-        Object.object_data = np.append(Object.object_data, self.compile(), axis = 0 )
-        Object.raw_vertex_data = np.append(Object.raw_vertex_data, self.mesh.points,axis=0) 
-        Object.vertex_data = np.append(Object.vertex_data, self.mesh.points,axis=0) 
+        self.scene.extend_origin_list(  np.full((self.vertex_count,3),self.location)  )
     
-    def calc_absolute(): # returns the relative coordinates of the vertex data
-        # input is shape (-1,3), vertex_data
-        
-        assert Object.vertex_data.shape[2]==3
-        x = Object.vertex_data[:,0]+Object.origin_list
-        return  x # shape = (-1,3)
-        
-    def calc_relative_to_camera(camera, subject): # returns the relative coordinates of the object data
-        # input is shape (-1,3), vertex_data
-        assert subject.shape[1:]==(2,3)
-        #return mesh - camera
-        #print(subject[:,0,:])
-        x = subject - camera.location
-        return x # shape = (-1,3)
-    
-    def fetch_vectors(obj_data, v_data): # wtf is my life. ndimensional arrays leave me absolutely in awe, using an array as an indice??!!
-        assert 1==2# Logan why are you using this function
-        assert obj_data.shape[3]==3
-        assert v_data.shape[1]==2
-        x = obj_data[:,0,0].reshape(-1).astype('int') # list of vertex positions
-        vertices = v_data[:,0]
-        d = vertices[x]
-        obj_data[:,0] = d.reshape(-1,3,3)
-        assert obj_data.shape[3]==3
-        #print('obj_data:',obj_data.shape)
-        return obj_data
-    
-    def translate(self, vector): # outdated
-        self.location = self.location + vector
-        Object.origin_list[self.origin_index:self.vertex_count] = self.location
-     
-    def global_rotate():
-        pass
-    
-    def translate_origin(self, vector):
-            self.vertex_list -= vector
+    def get_raw_vertexes(self):
+        return self.scene.raw_vertexes[self.index:self.index+self.vertex_count]
 
-    def get_scale(self, x, vertex_list):
-        vertex_list[:,0] = vertex_list[:,0] * x
-        return vertex_list
+    def get_vertexes(self):
+        return self.scene.vertexes[self.index:self.index+self.vertex_count]
+
+    def scale_mesh(self, factor): # transformations
+        scaled = self.get_vertexes() * factor
+        self.scene.update_vertexes(scaled, self.index)
     
+    def rotate_z(self, rotation):# rotates counter clockwise looking down
+        # TODO
+
+        self.scene.update_vertexes(xxxxx, self.index)
+        
+
+    def rotate_mesh(self, axis, degrees):
+        pass
+
+        
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
     def compile(self):# I'm going to leave this here as a testament to how shitty this code used to be
         #print('here')
         elements = self.mesh.linked_polygons.shape[0]
@@ -111,6 +101,7 @@ class Object:
         #print('polygon_data:',polygon_data.shape)
         
         return polygon_data
+'''
 
 
 

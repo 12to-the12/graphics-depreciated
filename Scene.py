@@ -23,15 +23,16 @@ class Scene:
     def calc_cam_space(self):# calculates vectors relative to the camera
         if self.world_update_flag:
             self.world_space_vertexes = self.vertexes + self.origin_list
-            self.world_update_flag = False
-        if self.active_camera.update_flag: # refers to location updates only
+
+        if self.active_camera.update_flag or self.world_update_flag: # refers to location updates only
             self.camera_space_vertexes = self.world_space_vertexes - self.active_camera.location
             self.active_camera.update_flag = False
+            self.world_update_flag = False
         return self.camera_space_vertexes
 
     # extend happens during build phase, update happens during runtime
     # extend creates the database, update modifies it
-    # extends should never be called during runtime
+    # extend methods should never be called during runtime
     # updates assume they are operating within the bounds of the existing array
     def extend_pointers(self, x): 
         assert x.shape[1] == 3
@@ -53,12 +54,12 @@ class Scene:
 
     def extend_origin_list(self, x):
         assert x.shape[1] == 3
-        print('adding to origin list')
         self.origin_list = np.append(self.origin_list, x, axis=0)
 
     def update_vertexes(self, x, start):
         len = x.shape[0]
         self.vertexes[start:start+len] = x
+        self.world_update_flag = True
 
     def update_face_normals(self, x, start):
         len = x.shape[0]

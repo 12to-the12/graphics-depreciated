@@ -30,7 +30,6 @@ def project(camera, vertex_data): # plots 3d points in 2d
     #polar = np.apply_along_axis(cartesian_to_polar, 1, vertex_data )
     
 
-    Stop_Watch.take_time('project')
     
     polar = polar[:,1:] # this line discards the magnitude
     
@@ -122,11 +121,9 @@ def draw_polygons(surface, built):
 def render(surface, camera):
     surface.fill((0, 0, 0))
 
-    Stop_Watch.take_time('starting render')
     
     absolute = Scene.active_scene.calc_cam_space()
 
-    Stop_Watch.take_time('absolute') # the class not the module
     
 
     # we don't need to map vertexes that are occluded, ones facing away, or ones not within the cubic frustrum
@@ -135,7 +132,7 @@ def render(surface, camera):
     
     projected = project(camera, absolute) # returns -0.5 to 0.5  takes list of vertexes (-1,3), returns list of coordinates(-1,2)
     
-    Stop_Watch.take_time('post project')
+    Stop_Watch.take_time('projection')
 
     scaled = screensize(surface, projected)
 
@@ -152,12 +149,13 @@ def render(surface, camera):
         draw_circle(surface, a)
         #wireframe_draw(surface, a)
     '''
-
+    #print('built:',built.shape[0])
     draw_polygons(surface, built)
 
-    Stop_Watch.take_time('draw')
+    Stop_Watch.take_time('drawing')
 
     pygame.display.flip()
+    Stop_Watch.take_time('flipping display')
     
     
 

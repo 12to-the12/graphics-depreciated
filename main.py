@@ -1,5 +1,6 @@
 # I'm sorry I didn't comment better
 #
+print('<START>')
 import sys, pygame
 from pygame import gfxdraw
 import random
@@ -42,10 +43,14 @@ world = Scene(active_camera=camera)
 
 
 #init_cubes()
-init_obj('danny.obj', [0,5,3])
+#init_obj('danny.obj', [0,5,3])
+#init_obj('danny.obj', [0,5,0])
+init_obj('danny.obj', [0,5,3-1])
 init_obj('text.obj', [0,5,0])
+
+Stop_Watch.frequency = 20
 def main(): # this is the main loop where everything happens
-    print('entering main loop')
+    print('entering main loop\n\n')
     world.vertexes = world.raw_vertexes
     stamp = time() 
     #print('start epoch:',stamp)
@@ -61,30 +66,24 @@ def main(): # this is the main loop where everything happens
     move_down = False
 
     update_rotation = False
-    sensitivity = 100
+    sensitivity = 250
+    move_mult = 0.1
     while 1:
+        Stop_Watch.take_time('starta')
         if Stop_Watch.loops%Stop_Watch.frequency==0:
+            print('total: ',(sum/Stop_Watch.loops)*1000)
             print('.')
         delta  = time()-stamp # this thing allows you to track time per frame
         stamp  = time()
-        
-        #print('stamp',stamp)
-        #print('delta',delta)
         sum += delta
-        if passed>100: 
-            passed = 0
-            sum = 0
         
-        #print(passed)
-        #print(1/delta)
-        #print('FPS:',(passed/(sum+0.01))  )
         #clock = pygame.time.Clock()
         # Limit to 60 frames per second
         #clock.tick(24)
-        xyz = 2
-        #Object.origin_list[:,xyz] = Object.origin_list[:,xyz] + 0.1
-        amount = 0.1
+        Stop_Watch.take_time('startb')
+        i = 0
         for event in pygame.event.get():
+            i += 1
             if event.type == pygame.QUIT: sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 start_yaw = camera.yaw
@@ -131,13 +130,14 @@ def main(): # this is the main loop where everything happens
 
                 elif event.key == pygame.K_DOWN:
                     move_down = False    
-
-        if move_forward:  camera.move(amount*+camera.y_vector)
-        if move_backward: camera.move(amount*-camera.y_vector)
-        if move_left:     camera.move(amount*-camera.x_vector)
-        if move_right:    camera.move(amount*+camera.x_vector)
-        if move_up:       camera.move([0,0,+amount])
-        if move_down:     camera.move([0,0,-amount])
+        Stop_Watch.take_time('flag evaluation')
+        #print(i,' events')
+        if move_forward:  camera.move(move_mult*+camera.y_vector)
+        if move_backward: camera.move(move_mult*-camera.y_vector)
+        if move_left:     camera.move(move_mult*-camera.x_vector)
+        if move_right:    camera.move(move_mult*+camera.x_vector)
+        if move_up:       camera.move([0,0,+move_mult])
+        if move_down:     camera.move([0,0,-move_mult])
         if update_rotation:
             pos = pygame.mouse.get_pos()
             size = screen.get_size()
@@ -147,9 +147,14 @@ def main(): # this is the main loop where everything happens
             camera.set_yaw( x*sensitivity + start_yaw )
             camera.set_pitch( -y*sensitivity + start_pitch )
         
+        Stop_Watch.take_time('input evaluation')
         
+
+        Object.x[0].scale_mesh(1.001)
+
         render(screen, camera)
         Stop_Watch.loops += 1
+        Stop_Watch.take_time('end')
 
 
 
