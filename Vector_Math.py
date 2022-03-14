@@ -36,7 +36,7 @@ def normalize(vector_list): # operates on array of vectors
     mag_list = magnitude(vector_list)
     return vector_list / mag_list[:,None]
 
-#@jit(parallel=True)
+@jit(nopython=True, parallel=True)
 def xcartesian_to_polar(vertex_list):# works
     # yaw starts from positive x, counter clockwise
     # pitch starts from positive z, moves down from there
@@ -57,6 +57,7 @@ def xcartesian_to_polar(vertex_list):# works
     polar = np.concatenate( (r, yaw, pitch), axis=1 )
     return polar
 
+
 def cartesian_to_polar(vector): # starts from positive x, counter clockwise
     #stamp = time.time()
     x, y, z = vector
@@ -76,10 +77,14 @@ def cartesian_to_polar(vector): # starts from positive x, counter clockwise
     if x<0: theta += 180
     phi = degrees(phi)
     return (r, theta, phi)
-    
-def polar_to_cartesian(vector): # this took hours jesus, now it's outdated
+
+
+def polar_to_cartesian(vector):# only operates on single vector
+    # this took hours jesus, now it's outdated
     r, theta, phi = vector
-    assert theta>0 # you know what you have to do
+    theta %= 360
+    #print(theta)
+    assert theta>=0 # you know what you have to do
     assert theta<360
     assert phi>0
     assert phi<360
@@ -89,10 +94,7 @@ def polar_to_cartesian(vector): # this took hours jesus, now it's outdated
     x = r * sin(phi) * cos(theta)
     y = r * sin(phi) * sin(theta)
     z = r * cos(phi)
-    x = clean(x)
-    y = clean(y)
-    z = clean(z)
-    return (x, y, z)
+    return np.array([x, y, z])
     
     
 def normal_vector(polygon_list): # finds the normal of a list of polygons
