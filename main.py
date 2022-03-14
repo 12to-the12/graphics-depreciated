@@ -20,6 +20,8 @@ from Objects import *
 from Stop_Watch import *
 from Scene import Scene
 
+from Tracing import Tracer
+
 from time import sleep
 from time import time
 from numba import jit
@@ -41,6 +43,7 @@ camera = Camera(FOV=46.8,location=[0,0,0],pitch=90,yaw=90)# FOV 46.8
 
 world = Scene(active_camera=camera)
 
+tracer = Tracer(camera, [3,3])#screen.get_size()  )
 
 init_cubes()
 #init_obj('danny.obj', [0,5,3])

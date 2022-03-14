@@ -80,6 +80,7 @@ def cartesian_to_polar(vector): # starts from positive x, counter clockwise
 
 
 def polar_to_cartesian(vector):# only operates on single vector
+    # operates on degrees not radians
     # this took hours jesus, now it's outdated
     r, theta, phi = vector
     theta %= 360
