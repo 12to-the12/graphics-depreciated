@@ -1,4 +1,5 @@
 import math
+from msilib.schema import Error
 import numpy as np
 from math import sin, cos, tan
 from math import acos, atan
@@ -124,6 +125,18 @@ def angle(a, b):# finds the angle between two (lists of) vectors
     dot = dot_product(a, b)
     angle = np.arccos( dot )
     return angle*57.295779513
+
+
+
+def ray_plane_intersection(ray_origin, ray_vector, plane_origin, plane_normal):
+    # this operates on one vector at a time
+    # keep in mind the ray vector does not have to be normalized
+    w = plane_origin - ray_origin # from the ray origin to the plane origin
+    magnitude = np.dot(w, plane_normal) / np.dot(ray_vector, plane_normal)
+    # error if there is no ray vector or plane normal, which is to be expected
+    if magnitude < 0: return None # there is no intersection
+    elif magnitude == 0: assert 0==1 #the point lies on the surface
+    else: return  ray_origin + magnitude*ray_vector # there is an intersection
 
 
 
