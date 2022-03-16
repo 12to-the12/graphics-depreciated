@@ -107,7 +107,8 @@ def normal_vector(polygon_list): # finds the normal of a list of polygons
     normals = np.cross(p2-p1, p3-p1)
     normals = normalize(normals)
     return normals
-    
+
+
 def dot_product(a, b): #return np.multiply(a, b).sum(1)
     # takes two (-1,3) shaped lists and returns a one dimensional list
     assert a.shape[0] == 3
@@ -125,7 +126,6 @@ def angle(a, b):# finds the angle between two (lists of) vectors
     dot = dot_product(a, b)
     angle = np.arccos( dot )
     return angle*57.295779513
-
 
 
 def ray_plane_intersection(ray_origin, ray_vector, plane_origin, plane_normal):
