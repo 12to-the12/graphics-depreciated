@@ -11,8 +11,8 @@ class Camera:
         self.update_view_vectors()
         #self.update_cubecull()
     def update_view_vectors(self):
-        self.x_vector = polar_to_cartesian([1, self.yaw+270, self.pitch])
-        self.y_vector = polar_to_cartesian([1, self.yaw, self.pitch])
+        self.x_vector = polar_to_cartesian(np.array([1, self.yaw+270, self.pitch]))
+        self.y_vector = polar_to_cartesian(np.array([1, self.yaw, self.pitch]))
         #self.z_vector = polar_to_cartesian([1, self.yaw, self.pitch])
     def set_yaw(self, yaw):
         self.yaw = yaw

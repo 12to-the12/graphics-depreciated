@@ -1,8 +1,8 @@
 import numpy as np
-import pygame
 import numba
 from Vector_Math import polar_to_cartesian
 from Camera import Camera
+from Scene import Scene
 
 
 #x = np.array([1,10,100,1000])
@@ -14,7 +14,23 @@ from Camera import Camera
 
 #print(a)
 
-class Tracer():
+
+
+class Ray():
+    def __init__ (self, origin, ray, scene, bounces=0):
+        self.origin = origin
+        self.ray = ray
+        self.scene = scene
+        self.bounces = bounces
+
+        self.trace()
+    
+    def trace(self):
+        pass
+
+
+
+class Ray_Table():
     
 
 
@@ -23,11 +39,10 @@ class Tracer():
         self.res = res
         self.xres, self.yres = res # the number of rays to cast horizontally and vertically
         print('created a tracer')
-        self.polar_coords = self.generate_polar_rays() # this generates the coordinates of the points in polar rays
-        print(self.polar_coords)
+        self.rays = self.generate_camera_rays() # this generates the coordinates of the points in polar rays
+        print(self.rays)
 
-    def generate_polar_rays (self):
-        pass
+    def generate_camera_rays (self):
         #np.apply_along_axis  polar_to_cartesian 
         xdelta = self.camera.FOV / self.xres
         multiplier = np.arange(0,self.xres) # thing to multiply the x width by
@@ -44,20 +59,22 @@ class Tracer():
         magnitude = np.ones( polar_coords.shape[0]  ).reshape(-1,1)
         polar_coords = np.append(magnitude, polar_coords, axis=1)
 
+        rays = np.apply_along_axis( polar_to_cartesian, 1, polar_coords)
 
 
-        return polar_coords # in the format ( magnitude, yaw, pitch)
+
+        return rays # in the format ( magnitude, yaw, pitch)
 
 
         #cartesian = np.apply_along_axis( polar_to_cartesian,  0, polarcoords)
 
     
     def trace():
-        image = np.apply_along_axis(self.trace_ray, 0, self.pixel_vectors):
+        pass
+        #image = np.apply_along_axis(self.trace_ray, 0, self.pixel_vectors):
         
-
 
 camera = Camera(FOV=90,location=[0,0,0],pitch=90,yaw=90)# FOV 46.8
 
-tracer = Tracer(camera, [3,3])#screen.get_size()  )
+tracer = Ray_Table(camera, [3,3])#screen.get_size()  )
 

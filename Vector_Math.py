@@ -5,6 +5,8 @@ from math import sin, cos, tan
 from math import acos, atan
 from math import degrees, radians
 import time
+
+from pandas import array
 from Stop_Watch import *
 from numba import jit
 def clean(x):
@@ -81,22 +83,24 @@ def cartesian_to_polar(vector): # starts from positive x, counter clockwise
 
 
 def polar_to_cartesian(vector):# only operates on single vector
+    assert type(vector) is type(np.array([]))
     # operates on degrees not radians
     # this took hours jesus, now it's outdated
     r, theta, phi = vector
     theta %= 360
-    #print(theta)
+    phi %= 360
     assert theta>=0 # you know what you have to do
-    assert theta<360
     assert phi>0
-    assert phi<360
     #if theta <0: theta += 180
     theta = radians(theta)
     phi = radians(phi)
     x = r * sin(phi) * cos(theta)
     y = r * sin(phi) * sin(theta)
     z = r * cos(phi)
-    return np.array([x, y, z])
+    x = round(x, 5)
+    y = round(y, 5)
+    z = round(z, 5)
+    return np.array([x, y, z]) 
     
     
 def normal_vector(polygon_list): # finds the normal of a list of polygons
