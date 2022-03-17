@@ -46,10 +46,10 @@ world = Scene(active_camera=camera)
 #tracer = Tracer(camera, [3,3])#screen.get_size()  )
 
 #init_cubes()
-init_obj('danny.obj', [0,5,3])
+init_obj('Objects/danny.obj', [0,5,3])
 #init_obj('danny.obj', [0,5,0])
 #init_obj('danny.obj', [0,5,3-1])
-init_obj('text.obj', [0,5,0])
+init_obj('Objects/text.obj', [0,5,0])
 
 
 def main(): # this is the main loop where everything happens
