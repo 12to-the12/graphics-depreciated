@@ -38,7 +38,7 @@ class Ray_Table():
         self.camera = camera
         self.res = res
         self.xres, self.yres = res # the number of rays to cast horizontally and vertically
-        print('created a tracer')
+        print('created a table')
         self.rays = self.generate_camera_rays() # this generates the coordinates of the points in polar rays
         print(self.rays)
 

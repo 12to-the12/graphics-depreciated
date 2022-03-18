@@ -142,6 +142,65 @@ def ray_plane_intersection(ray_origin, ray_vector, plane_origin, plane_normal):
     elif magnitude == 0: assert 0==1 #the point lies on the surface
     else: return  ray_origin + magnitude*ray_vector # there is an intersection
 
+def project( original, target):
+    numerator = np.dot(original, target)
+    denominator = np.dot(target, target)
+    return (numerator / denominator) * target
+
+def barycentric(polygon, point):
+    # https://www.youtube.com/watch?v=EZXz-uPyCyA
+    # calculates from cartesian worldspace to barycenteric coordinates for point
+    # assumes every point lies on the same plane
+    I = point
+    A, B, C = polygon # the three corners of the polygon
+    
+    CB = B - C
+    AB = B - A
+
+    v = AB - project(AB, CB)
+    
+
+    AI = I - A
+
+    numerator = np.dot( v, AI )
+    denominator = np.dot( v, AB )
+    a = 1 - (numerator / denominator )
+
+    
+
+    AC = C - A
+    BC = C - B
+    v = BC - project(BC, AC)
+    BI = I - B
+
+    numerator = np.dot( v, BI )
+    denominator = np.dot( v, BC )
+
+    b = 1 - (numerator / denominator )
+
+    
+
+    BA = A - B
+    CA = A - C
+    v = CA - project(CA, BA)
+    CI = I - C
+
+    numerator = np.dot( v, CI )
+    denominator = np.dot( v, CA )
+
+    c = 1 - (numerator / denominator)
+
+    
+
+    a = round(a, 5)
+    b = round(b, 5)
+    c = round(c, 5)
+
+    print(f"a: {a}")
+    print(f"b: {b}")
+    print(f"c: {c}")
+
+    return  (0<a<1) and (0<b<1) and (0<c<1) # things on the edge don't count as landed
 
 
 
