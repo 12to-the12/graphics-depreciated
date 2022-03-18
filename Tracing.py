@@ -29,7 +29,7 @@ class Ray():
         
     
     def trace(self):
-        polygon = [ [0,5,7], [-3,5,0], [3,5,0]]
+        polygon = [ [0,5,-3], [-3,5,0], [3,5,0]]
         polygon = np.array(polygon)
         plane_origin = np.array([0,5,0])
         plane_normal = np.array([0,-1,0])
@@ -75,7 +75,6 @@ class Ray_Table():
 
         magnitude = np.ones( polar_coords.shape[0]  ).reshape(-1,1)
         polar_coords = np.append(magnitude, polar_coords, axis=1)
-\
 
         rays = np.apply_along_axis( polar_to_cartesian, 1, polar_coords)
 
@@ -90,7 +89,8 @@ class Ray_Table():
     def trace(self):
         print('starting trace')
         image = np.array([])
-        for ray in self.rays:
+        for count, ray in enumerate(self.rays):
+            if count%1000==0:print(f"{count:>5}" ) 
             x = Ray([0,0,0], ray, self.scene)
 
             image = np.append(image,  x.trace() )
