@@ -196,10 +196,6 @@ def barycentric(polygon, point):
     b = round(b, 5)
     c = round(c, 5)
 
-    print(f"a: {a}")
-    print(f"b: {b}")
-    print(f"c: {c}")
-
     return  (0<a<1) and (0<b<1) and (0<c<1) # things on the edge don't count as landed
 
 
