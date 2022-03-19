@@ -1,5 +1,8 @@
 import numpy as np
 from Vector_Math import *
+#from numba.experimental import jitclass
+
+
 class Camera:
     def __init__(self, FOV=90, location=[0,0,0], pitch=90,yaw=90):
         self.FOV = FOV

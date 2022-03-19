@@ -1,5 +1,10 @@
 # I'm sorry I didn't comment better
 #
+
+
+'''
+Moving away from an object oriented pipeline would allow me to speed things up significantly
+'''
 print('<START>')
 import sys, pygame
 from pygame import gfxdraw
@@ -19,6 +24,7 @@ from Rendering import *
 from Objects import *
 from Stop_Watch import *
 from Scene import Scene
+from Tracing import Ray_Table
 
 #from Tracing import Tracer
 
@@ -31,7 +37,7 @@ print('done importing')
 Stop_Watch.timing_flag = True
 #sleep(1) 
 pygame.init()
-size = 1000
+size = 200
 size = width, height = (size,size)
 speed = [1, 1]
 screen = pygame.display.set_mode(size)#, pygame.FULLSCREEN)
@@ -39,18 +45,30 @@ screen = pygame.display.set_mode(size)#, pygame.FULLSCREEN)
 #print(screen.get_size() )
 
 
-camera = Camera(FOV=46.8,location=[0,0,0],pitch=90,yaw=90)# FOV 46.8
+camera = Camera(FOV=90,location=[0,0,0],pitch=90,yaw=90)# FOV 46.8
 
 world = Scene(active_camera=camera)
 
 #tracer = Tracer(camera, [3,3])#screen.get_size()  )
 
 #init_cubes()
-init_obj('Objects/danny.obj', [0,5,3])
+init_obj('Objects/suzanne.obj', [0,5,0])
 #init_obj('danny.obj', [0,5,0])
 #init_obj('danny.obj', [0,5,3-1])
-init_obj('Objects/text.obj', [0,5,0])
+#init_obj('Objects/text.obj', [0,5,0])
 
+
+
+table  = Ray_Table(camera, world, size )# will be the screen resolution
+
+table.trace()
+
+table.display(screen)
+
+
+
+pygame.display.flip()
+print('done')
 
 def main(): # this is the main loop where everything happens
     print('entering main loop\n\n')
@@ -164,7 +182,8 @@ def main(): # this is the main loop where everything happens
 
 
 
-main()
+#main()
+sleep(100000)
 
 
 

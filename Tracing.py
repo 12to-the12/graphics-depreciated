@@ -1,5 +1,6 @@
 import numpy as np
 from numba import jit
+#from numba.experimental import jitclass
 from Vector_Math import polar_to_cartesian
 from Vector_Math import ray_plane_intersection
 from Vector_Math import barycentric
@@ -85,18 +86,15 @@ class Ray_Table():
 
         #cartesian = np.apply_along_axis( polar_to_cartesian,  0, polarcoords)
 
-    #@jit(nopython=True)
     def trace(self):
-        print('starting trace')
         image = np.array([])
         for count, ray in enumerate(self.rays):
-            if count%1000==0:print(f"{count:>5}" ) 
+            if count%1000==0:print(count)#print(f"{count:>5}" ) 
             x = Ray([0,0,0], ray, self.scene)
 
             image = np.append(image,  x.trace() )
         image = image.reshape( self.xres, self.yres, 3)
         self.image = image
-        print('finished trace')
     
     def display(self, surface):
         

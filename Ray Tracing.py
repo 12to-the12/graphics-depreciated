@@ -5,7 +5,7 @@ from Camera import Camera
 from Tracing import Ray_Table
 
 pygame.init()
-size = 250
+size = 200
 size = width, height = (size,size)
 screen = pygame.display.set_mode(size)
 

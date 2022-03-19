@@ -1,8 +1,9 @@
 
 import numpy as np
+#from numba.experimental import jitclass
+
 
 class Scene:
-    active_scene = None
     def __init__(self, active_camera=None):
         Scene.active_scene = self
         # none of these  change during runtime
@@ -16,6 +17,7 @@ class Scene:
         self.face_normals = np.array([]).reshape(-1,3)
         self.origin_list  = np.array([]).reshape(-1,3)
 
+        
         self.world_update_flag  = True
 
         self.active_camera = active_camera
@@ -56,6 +58,8 @@ class Scene:
         assert x.shape[1] == 3
         self.origin_list = np.append(self.origin_list, x, axis=0)
 
+
+
     def update_vertexes(self, x, start):
         len = x.shape[0]
         self.vertexes[start:start+len] = x
@@ -68,5 +72,10 @@ class Scene:
     def update_origin_list(self, x, start):
         len = x.shape[0]
         self.origin_list[start:start+len] = x
+
+    def build_polygons(self):
+        pass
+        self.polygon_list  = np.array([]).reshape(-1,3,3)# this is a list of all the built out polygons, only to be used for ray tracing currently
+
     
     
