@@ -1,7 +1,6 @@
 # I'm sorry I didn't comment better
 #
 
-
 '''
 Moving away from an object oriented pipeline would allow me to speed things up significantly
 '''
@@ -37,7 +36,7 @@ print('done importing')
 Stop_Watch.timing_flag = True
 #sleep(1) 
 pygame.init()
-size = 200
+size = 500
 size = width, height = (size,size)
 speed = [1, 1]
 screen = pygame.display.set_mode(size)#, pygame.FULLSCREEN)
@@ -45,32 +44,26 @@ screen = pygame.display.set_mode(size)#, pygame.FULLSCREEN)
 #print(screen.get_size() )
 
 
-camera = Camera(FOV=90,location=[0,0,0],pitch=90,yaw=90)# FOV 46.8
+camera = Camera(FOV=46.8,location=[0,0,0],pitch=90,yaw=90)# FOV 46.8
 
 world = Scene(active_camera=camera)
 
 #tracer = Tracer(camera, [3,3])#screen.get_size()  )
-
+print('a')
 #init_cubes()
 init_obj('Objects/suzanne.obj', [0,5,0])
+print('b')
 #init_obj('danny.obj', [0,5,0])
 #init_obj('danny.obj', [0,5,3-1])
 #init_obj('Objects/text.obj', [0,5,0])
 
 
 
-table  = Ray_Table(camera, world, size )# will be the screen resolution
-
-table.trace()
-
-table.display(screen)
-
-
 
 pygame.display.flip()
 print('done')
 
-def main(): # this is the main loop where everything happens
+def video(): # this is the main loop where everything happens
     print('entering main loop\n\n')
     world.vertexes = world.raw_vertexes
     stamp = time() 
@@ -174,17 +167,34 @@ def main(): # this is the main loop where everything happens
         Stop_Watch.take_time('input evaluation')
         
 
-        Object.x[0].scale_mesh(1.001)
+        #Object.x[0].scale_mesh(1.001)
 
         render(screen, camera)
         Stop_Watch.loops += 1
         Stop_Watch.take_time('end')
 
 
+def still():
+    print('entering still\n\n')
+    world.vertexes = world.raw_vertexes
 
-#main()
-sleep(100000)
+    Stop_Watch.frequency = 100
+    Stop_Watch.epoch = time()
 
+    match config.ray_tracing:
+        case
+
+    render(screen, camera)
+    while 1:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT: sys.exit()
+
+video()
+#still()
+
+
+
+print('terminated')
 
 
 

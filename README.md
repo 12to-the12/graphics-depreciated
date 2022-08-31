@@ -9,4 +9,6 @@ the vector_math file is referenced by the rendering file and is responsible for 
 
 the camera, object mesh and  material  files contain their respective classes
 
-the objects file actually builds some objects, a grid of cubes currently
+the objects file actually constructs some objects, a grid of cubes currently
+
+

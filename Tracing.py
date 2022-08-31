@@ -9,16 +9,6 @@ from Scene import Scene
 import pygame
 
 
-#x = np.array([1,10,100,1000])
-#y = np.array([5,6,7,8])
-
-#a = np.array ( np.meshgrid(x,y, indexing='xy')   )
-#a = np.dstack(a)
-
-
-#print(a)
-
-
 
 class Ray():
     def __init__ (self, origin, ray, scene, bounces=0):
@@ -86,7 +76,7 @@ class Ray_Table():
 
         #cartesian = np.apply_along_axis( polar_to_cartesian,  0, polarcoords)
 
-    def trace(self):
+    def trace(self):# makes a 2d array of camera rays
         image = np.array([])
         for count, ray in enumerate(self.rays):
             if count%1000==0:print(count)#print(f"{count:>5}" ) 

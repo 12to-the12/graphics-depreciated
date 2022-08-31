@@ -117,10 +117,10 @@ def render(surface, camera):
     # we don't need to map vertexes that are occluded, or ones facing away
     
     # TODO distance cull
-    Stop_Watch.take_time('relativity')
+    ##Stop_Watch.take_time('relativity')
     projected = project(camera, camera_space_vertexes) # returns -0.5 to 0.5  takes list of vertexes (-1,3), returns list of coordinates(-1,2)
     
-    Stop_Watch.take_time('post projection')
+    ##Stop_Watch.take_time('post projection')
 
     #projected = cull_offscreen(projected)
     scaled = screensize(surface, projected)
@@ -129,12 +129,12 @@ def render(surface, camera):
     built = build_coords(scaled, scene.pointers)
     
     # TODO cull backfaces
-    Stop_Watch.take_time('building')
+    ##Stop_Watch.take_time('building')
     #draw_points(surface, built.reshape(-1,2))
     #print('built:',built.shape[0])
     draw_polygons(surface, built)
 
-    Stop_Watch.take_time('drawing')
+    ##Stop_Watch.take_time('drawing')
 
     pygame.display.flip()
     
