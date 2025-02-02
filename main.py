@@ -181,8 +181,8 @@ def still():
     Stop_Watch.frequency = 100
     Stop_Watch.epoch = time()
 
-    match config.ray_tracing:
-        case
+    # match config.ray_tracing:
+    #     case
 
     render(screen, camera)
     while 1:
